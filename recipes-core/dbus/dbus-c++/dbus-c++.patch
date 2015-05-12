@@ -1,0 +1,11 @@
+diff -uNr git.orig/src/eventloop-integration.cpp git/src/eventloop-integration.cpp
+--- git.orig/src/eventloop-integration.cpp	2013-12-06 10:12:10.957900984 +0100
++++ git/src/eventloop-integration.cpp	2013-12-06 10:08:13.045911590 +0100
+@@ -38,6 +38,7 @@
+ #include <cassert>
+ #include <sys/poll.h>
+ #include <fcntl.h>
++#include <unistd.h>
+ 
+ using namespace DBus;
+ using namespace std;

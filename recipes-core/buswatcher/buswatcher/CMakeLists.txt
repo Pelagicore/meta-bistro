@@ -1,0 +1,14 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
+
+PROJECT (buswatcher)
+
+FIND_PACKAGE(PkgConfig) 
+
+PKG_CHECK_MODULES(gio REQUIRED gio-2.0)
+
+ADD_EXECUTABLE (buswatcher watcher.c)
+
+TARGET_LINK_LIBRARIES (buswatcher ${gio_LIBRARIES})
+INCLUDE_DIRECTORIES (buswatcher ${gio_INCLUDE_DIRS})
+
+INSTALL (TARGETS buswatcher DESTINATION bin)

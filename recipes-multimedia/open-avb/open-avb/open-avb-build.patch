@@ -1,0 +1,29 @@
+diff --git a/daemons/maap/linux/Makefile b/daemons/maap/linux/Makefile
+index 40900f9..8e23369 100644
+--- a/daemons/maap/linux/Makefile
++++ b/daemons/maap/linux/Makefile
+@@ -8,7 +8,7 @@ FLAGS=-lpthread -lpcap
+ all: maap_daemon
+ 
+ maap_daemon: maap_linux.c
+-	gcc -o $(BUILD_DIR)/maap_daemon $(INCFLAGS) maap_linux.c $(CFLAGS) $(FLAGS) $(EXTRA_FLAGS)
++	$(CC) -o $(BUILD_DIR)/maap_daemon $(INCFLAGS) maap_linux.c $(CFLAGS) $(FLAGS) $(EXTRA_FLAGS)
+ 
+ clean:
+ 	rm -rf $(BUILD_DIR)/maap_daemon
+diff --git a/daemons/mrpd/Makefile b/daemons/mrpd/Makefile
+index 3603509..f068430 100644
+--- a/daemons/mrpd/Makefile
++++ b/daemons/mrpd/Makefile
+@@ -2,11 +2,6 @@ OPT=-O2
+ #CFLAGS=$(OPT) -Wall -W -Wno-parentheses -Wstrict-prototypes -Wmissing-prototypes -ggdb
+ CFLAGS=$(OPT) -Wall -W -Wno-parentheses -ggdb -D_GNU_SOURCE
+ 
+-ifeq ($(ARCH),arm)
+-CC=arm-none-linux-gnueabi-gcc
+-else
+-CC=gcc
+-endif
+ INCFLAGS=-I../common
+ #LDLIBS=-ligb -lpci
+ #LDFLAGS=-L../lib

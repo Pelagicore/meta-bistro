@@ -1,0 +1,11 @@
+[Unit]
+Description=Dleyna server
+After=syslog.target
+After=lightmediascanner.service
+After=rygel.service
+
+[Service]
+ExecStart=/usr/bin/dbus-send --session --print-reply --dest=com.intel.dleyna-server /com/intel/dLeynaServer com.intel.dLeynaServer.Manager.GetServers
+
+[Install]
+WantedBy=multi-user.target

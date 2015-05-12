@@ -1,0 +1,24 @@
+From bc267eefa6289080721e5fb41c466ca1df02733d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonatan=20P=C3=A5lsson?= <jonatan.palsson@pelagicore.com>
+Date: Wed, 26 Jun 2013 09:13:31 +0200
+Subject: [PATCH] Install binaries in bin directory
+
+---
+ src/bin/Makefile.am |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/bin/Makefile.am b/src/bin/Makefile.am
+index 3ce2cd3..92450c6 100644
+--- a/src/bin/Makefile.am
++++ b/src/bin/Makefile.am
+@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
+ 	-I$(top_srcdir)/src/lib \
+ 	@SQLITE3_CFLAGS@
+ 
+-noinst_PROGRAMS = \
++bin_PROGRAMS = \
+ 	test \
+ 	list-parsers
+ 
+-- 
+1.7.10.4

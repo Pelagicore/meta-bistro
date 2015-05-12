@@ -1,0 +1,2227 @@
+From 15092a0b9a4cb352f55993e936737f8bf993fa0f Mon Sep 17 00:00:00 2001
+From: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Date: Thu, 21 Nov 2013 14:19:50 +0200
+Subject: [PATCH] plugins: Add LightMediascanner plugin
+
+---
+ INSTALL                                           |  15 +-
+ configure.ac                                      |  18 ++
+ src/plugins/Makefile.am                           |   5 +
+ src/plugins/lms/Makefile.am                       |  45 +++
+ src/plugins/lms/README                            |  17 +
+ src/plugins/lms/lms.plugin.in                     |   7 +
+ src/plugins/lms/rygel-lms-album.vala              | 139 ++++++++
+ src/plugins/lms/rygel-lms-albums.vala             | 174 ++++++++++
+ src/plugins/lms/rygel-lms-all-images.vala         |  81 +++++
+ src/plugins/lms/rygel-lms-all-music.vala          | 122 +++++++
+ src/plugins/lms/rygel-lms-all-videos.vala         |  91 ++++++
+ src/plugins/lms/rygel-lms-artist.vala             |  72 +++++
+ src/plugins/lms/rygel-lms-artists.vala            |  60 ++++
+ src/plugins/lms/rygel-lms-category-container.vala | 376 ++++++++++++++++++++++
+ src/plugins/lms/rygel-lms-collate.c               |  49 +++
+ src/plugins/lms/rygel-lms-database.vala           | 226 +++++++++++++
+ src/plugins/lms/rygel-lms-image-root.vala         |  35 ++
+ src/plugins/lms/rygel-lms-image-year.vala         |  94 ++++++
+ src/plugins/lms/rygel-lms-image-years.vala        |  57 ++++
+ src/plugins/lms/rygel-lms-music-root.vala         |  36 +++
+ src/plugins/lms/rygel-lms-plugin-factory.vala     |  40 +++
+ src/plugins/lms/rygel-lms-plugin.vala             |  35 ++
+ src/plugins/lms/rygel-lms-root-container.vala     |  66 ++++
+ src/plugins/lms/rygel-lms-sql-function.vala       |  31 ++
+ src/plugins/lms/rygel-lms-sql-operator.vala       |  73 +++++
+ 25 files changed, 1959 insertions(+), 5 deletions(-)
+ create mode 100644 src/plugins/lms/Makefile.am
+ create mode 100644 src/plugins/lms/README
+ create mode 100644 src/plugins/lms/lms.plugin.in
+ create mode 100644 src/plugins/lms/rygel-lms-album.vala
+ create mode 100644 src/plugins/lms/rygel-lms-albums.vala
+ create mode 100644 src/plugins/lms/rygel-lms-all-images.vala
+ create mode 100644 src/plugins/lms/rygel-lms-all-music.vala
+ create mode 100644 src/plugins/lms/rygel-lms-all-videos.vala
+ create mode 100644 src/plugins/lms/rygel-lms-artist.vala
+ create mode 100644 src/plugins/lms/rygel-lms-artists.vala
+ create mode 100644 src/plugins/lms/rygel-lms-category-container.vala
+ create mode 100644 src/plugins/lms/rygel-lms-collate.c
+ create mode 100644 src/plugins/lms/rygel-lms-database.vala
+ create mode 100644 src/plugins/lms/rygel-lms-image-root.vala
+ create mode 100644 src/plugins/lms/rygel-lms-image-year.vala
+ create mode 100644 src/plugins/lms/rygel-lms-image-years.vala
+ create mode 100644 src/plugins/lms/rygel-lms-music-root.vala
+ create mode 100644 src/plugins/lms/rygel-lms-plugin-factory.vala
+ create mode 100644 src/plugins/lms/rygel-lms-plugin.vala
+ create mode 100644 src/plugins/lms/rygel-lms-root-container.vala
+ create mode 100644 src/plugins/lms/rygel-lms-sql-function.vala
+ create mode 100644 src/plugins/lms/rygel-lms-sql-operator.vala
+
+diff --git a/INSTALL b/INSTALL
+index 7d1c323..007e939 100644
+--- a/INSTALL
++++ b/INSTALL
+@@ -1,8 +1,8 @@
+ Installation Instructions
+ *************************
+ 
+-Copyright (C) 1994, 1995, 1996, 1999, 2000, 2001, 2002, 2004, 2005,
+-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
++Copyright (C) 1994-1996, 1999-2002, 2004-2013 Free Software Foundation,
++Inc.
+ 
+    Copying and distribution of this file, with or without modification,
+ are permitted in any medium without royalty provided the copyright
+@@ -226,6 +226,11 @@ order to use an ANSI C compiler:
+ 
+ and if that doesn't work, install pre-built binaries of GCC for HP-UX.
+ 
++   HP-UX `make' updates targets which have the same time stamps as
++their prerequisites, which makes it generally unusable when shipped
++generated files such as `configure' are involved.  Use GNU `make'
++instead.
++
+    On OSF/1 a.k.a. Tru64, some versions of the default C compiler cannot
+ parse its `<wchar.h>' header file.  The option `-nodtk' can be used as
+ a workaround.  If GNU CC is not installed, it is therefore recommended
+@@ -304,9 +309,10 @@ causes the specified `gcc' to be used as the C compiler (unless it is
+ overridden in the site shell script).
+ 
+ Unfortunately, this technique does not work for `CONFIG_SHELL' due to
+-an Autoconf bug.  Until the bug is fixed you can use this workaround:
++an Autoconf limitation.  Until the limitation is lifted, you can use
++this workaround:
+ 
+-     CONFIG_SHELL=/bin/bash /bin/bash ./configure CONFIG_SHELL=/bin/bash
++     CONFIG_SHELL=/bin/bash ./configure CONFIG_SHELL=/bin/bash
+ 
+ `configure' Invocation
+ ======================
+@@ -362,4 +368,3 @@ operates.
+ 
+ `configure' also accepts some other, not widely useful, options.  Run
+ `configure --help' for more details.
+-
+diff --git a/configure.ac b/configure.ac
+index 8e8110b..83f4175 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -142,6 +142,18 @@ AS_IF([test "x$enable_mediathek_plugin" = "xyes"],
+                        libxml-2.0 >= $LIBXML_REQUIRED])
+   ])
+ 
++
++RYGEL_ADD_PLUGIN([lms],[LightMediaScanner],[yes])
++AS_IF([test "x$enable_lms_plugin" = "xyes"],
++  [
++    PKG_CHECK_MODULES([RYGEL_PLUGIN_LMS_DEPS],
++                      [$RYGEL_COMMON_MODULES
++                       gio-2.0 >= $GIO_REQUIRED
++                       sqlite3 >= $LIBSQLITE3_REQUIRED])
++    RYGEL_PLUGIN_LMS_DEPS_VALAFLAGS="$RYGEL_COMMON_MODULES_VALAFLAGS --pkg gio-2.0 --pkg gee-0.8 --pkg rygel-server-2.2 --pkg rygel-core-2.2  --pkg sqlite3"
++    AC_SUBST([RYGEL_PLUGIN_LMS_DEPS_VALAFLAGS])
++  ])
++
+ AS_IF([test "x$with_media_engine" = "xgstreamer"],
+       [
+         RYGEL_ADD_PLUGIN([playbin],[GStreamer playbin],[yes])
+@@ -302,6 +314,11 @@ then
+     fi
+ fi
+ 
++dnl Check additional requirements for LMS plugin
++if test "x$enable_lms_plugin" = "xyes";
++then
++    RYGEL_CHECK_PACKAGES([sqlite3])
++fi
+ 
+ RYGEL_ADD_PLUGIN([tracker],[Tracker],[yes])
+ AS_IF([test "x$enable_tracker_plugin" = "xyes"],
+@@ -465,6 +482,7 @@ echo "
+             version:            ${tracker_api_version}
+         mediathek:              ${enable_mediathek_plugin}
+         media-export            ${enable_media_export_plugin}
++        lightmediascanner       ${enable_lms_plugin}
+         external:               ${enable_external_plugin}
+         MPRIS2:                 ${enable_mpris_plugin}
+         gst-launch:             ${enable_gst_launch_plugin}
+diff --git a/src/plugins/Makefile.am b/src/plugins/Makefile.am
+index 3c1365c..ff26b6a 100644
+--- a/src/plugins/Makefile.am
++++ b/src/plugins/Makefile.am
+@@ -10,6 +10,10 @@ if BUILD_MEDIA_EXPORT_PLUGIN
+ MEDIA_EXPORT_PLUGIN = media-export
+ endif
+ 
++if BUILD_LMS_PLUGIN
++LMS_PLUGIN = lms
++endif
++
+ if BUILD_EXTERNAL_PLUGIN
+ EXTERNAL_PLUGIN = external
+ endif
+@@ -29,6 +33,7 @@ endif
+ SUBDIRS = $(TRACKER_PLUGIN) \
+ 	  $(MEDIATHEK_PLUGIN) \
+ 	  $(MEDIA_EXPORT_PLUGIN) \
++	  $(LMS_PLUGIN) \
+ 	  $(EXTERNAL_PLUGIN) \
+ 	  $(MPRIS_PLUGIN) \
+ 	  $(GST_LAUNCH_PLUGIN) \
+diff --git a/src/plugins/lms/Makefile.am b/src/plugins/lms/Makefile.am
+new file mode 100644
+index 0000000..1e777dd
+--- /dev/null
++++ b/src/plugins/lms/Makefile.am
+@@ -0,0 +1,45 @@
++include $(top_srcdir)/common.am
++
++plugin_LTLIBRARIES = librygel-lms.la
++plugin_DATA = lms.plugin
++
++librygel_lms_la_SOURCES = \
++	rygel-lms-plugin.vala \
++	rygel-lms-plugin-factory.vala \
++	rygel-lms-root-container.vala \
++	rygel-lms-music-root.vala \
++	rygel-lms-image-root.vala \
++	rygel-lms-category-container.vala \
++	rygel-lms-all-music.vala \
++	rygel-lms-album.vala \
++	rygel-lms-albums.vala \
++	rygel-lms-artist.vala \
++	rygel-lms-artists.vala \
++	rygel-lms-all-videos.vala \
++	rygel-lms-database.vala \
++	rygel-lms-all-images.vala \
++	rygel-lms-image-years.vala \
++	rygel-lms-image-year.vala \
++	rygel-lms-sql-function.vala \
++	rygel-lms-sql-operator.vala \
++	rygel-lms-collate.c
++
++librygel_lms_la_VALAFLAGS = \
++	--enable-experimental \
++	$(RYGEL_PLUGIN_LMS_DEPS_VALAFLAGS) \
++	$(RYGEL_COMMON_LIBRYGEL_SERVER_VALAFLAGS) \
++	$(RYGEL_COMMON_VALAFLAGS)
++
++librygel_lms_la_CFLAGS = \
++	$(RYGEL_PLUGIN_LMS_DEPS_CFLAGS) \
++	$(RYGEL_COMMON_LIBRYGEL_SERVER_CFLAGS) \
++	-DG_LOG_DOMAIN='"Lms"'
++
++librygel_lms_la_LIBADD = \
++	$(RYGEL_PLUGIN_LMS_DEPS_LIBS) \
++	$(RYGEL_COMMON_LIBRYGEL_SERVER_LIBS)
++
++librygel_lms_la_LDFLAGS = \
++	$(RYGEL_PLUGIN_LINKER_FLAGS)
++
++EXTRA_DIST = lms.plugin.in
+diff --git a/src/plugins/lms/README b/src/plugins/lms/README
+new file mode 100644
+index 0000000..b741806
+--- /dev/null
++++ b/src/plugins/lms/README
+@@ -0,0 +1,17 @@
++rygel-lms
++=========
++
++A rygel mediaserver plugin that exposes a lightmediascanner database
++as a Mediaserver.
++
++Configuration in rygel.conf:
++
++    [LightMediaScanner]
++    db-path=/path/to/lightmediascannerd.sqlite3
++    title=My Media
++
++* Supports browsing and searching (but in many cases searches will
++  still fall back to the inefficient simple_search()).
++* UpdateIDs are not yet supported as lightmediascanner seems to have
++  not change signal support yet
++* No real DLNA CTT testing has been done so far
+diff --git a/src/plugins/lms/lms.plugin.in b/src/plugins/lms/lms.plugin.in
+new file mode 100644
+index 0000000..9db9895
+--- /dev/null
++++ b/src/plugins/lms/lms.plugin.in
+@@ -0,0 +1,7 @@
++[Plugin]
++Version = @VERSION@
++Module = lms
++Name = LMS
++License = LGPL
++Description = LMS DMS plugin for Rygel
++Copyright = Copyright © Intel 
+diff --git a/src/plugins/lms/rygel-lms-album.vala b/src/plugins/lms/rygel-lms-album.vala
+new file mode 100644
+index 0000000..aad7b78
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-album.vala
+@@ -0,0 +1,139 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Sqlite;
++
++public class Rygel.LMS.Album : Rygel.LMS.CategoryContainer {
++    private static const string SQL_ALL_TEMPLATE = 
++        "SELECT files.id, files.path, files.size, " +
++               "audios.title as title, audios.trackno, audios.length, audios.channels, audios.sampling_rate, audios.bitrate, audios.dlna_profile, audios.dlna_mime, " +
++               "audio_artists.name as artist, " +
++               "audio_albums.name " +
++        "FROM audios, files " +
++        "LEFT JOIN audio_artists " +
++        "ON audios.artist_id = audio_artists.id " +
++        "LEFT JOIN audio_albums " +
++        "ON audios.album_id = audio_albums.id " +
++        "WHERE audios.id = files.id AND audios.album_id = %s " +
++        "LIMIT ? OFFSET ?;";
++
++    private static const string SQL_COUNT_TEMPLATE =
++        "SELECT COUNT(audios.id) " +
++        "FROM audios, files " +
++        "WHERE audios.id = files.id AND audios.album_id = %s;";
++
++    private static const string SQL_COUNT_WITH_FILTER_TEMPLATE =
++        "SELECT COUNT(audios.id), audios.title as title, " +
++               "audio_artists.name as artist, " +
++               "audio_albums.name " +
++        "FROM audios, files " +
++        "LEFT JOIN audio_artists " +
++        "ON audios.artist_id = audio_artists.id " +
++        "LEFT JOIN audio_albums " +
++        "ON audios.album_id = audio_albums.id " +
++        "WHERE audios.id = files.id AND audios.album_id = %s;";
++
++    private static const string SQL_FIND_OBJECT_TEMPLATE =
++        "SELECT files.id, files.path, files.size, " +
++               "audios.title, audios.trackno, audios.length, audios.channels, audios.sampling_rate, audios.bitrate, audios.dlna_profile, audios.dlna_mime, " + 
++               "audio_artists.name, " +
++               "audio_albums.name " +
++        "FROM audios, files " +
++        "LEFT JOIN audio_artists " +
++        "ON audios.artist_id = audio_artists.id " +
++        "LEFT JOIN audio_albums " +
++        "ON audios.album_id = audio_albums.id " +
++        "WHERE files.id = ? AND audios.id = files.id AND audios.album_id = %s;";
++
++    protected override MediaObject? object_from_statement (Statement statement) {
++        var id = statement.column_int (0);
++        var path = statement.column_text (1);
++        var mime_type = statement.column_text(10);
++
++        if (mime_type == null || mime_type.length == 0) {
++            /* TODO is this correct? */
++            debug ("Skipping music item %d (%s) with no MIME type",
++                   id,
++                   path);
++            return null;
++        }
++
++        var title = statement.column_text(3);
++        var song_id = this.build_child_id (id);
++        var song = new MusicItem (song_id, this, title);
++        song.ref_id = this.build_reference_id (id);
++        song.size = statement.column_int(2);
++        song.track_number = statement.column_int(4);
++        song.duration = statement.column_int(5);
++        song.channels = statement.column_int(6);
++        song.sample_freq = statement.column_int(7); 
++        song.bitrate = statement.column_int(8);
++        song.dlna_profile = statement.column_text(9);
++        song.mime_type = mime_type;
++        song.artist = statement.column_text(11);
++        song.album = statement.column_text(12);
++        File file = File.new_for_path (path);
++        song.add_uri (file.get_uri ());
++
++        return song;
++    }
++
++    private static string get_sql_all (string db_id) {
++        return (SQL_ALL_TEMPLATE.printf (db_id));
++    }
++    private static string get_sql_find_object (string db_id) {
++        return (SQL_FIND_OBJECT_TEMPLATE.printf (db_id));
++    }
++    private static string get_sql_count (string db_id) {
++        return (SQL_COUNT_TEMPLATE.printf (db_id));
++    }
++
++    protected override string get_sql_all_with_filter (string filter) {
++        if (filter.length == 0) {
++            return this.sql_all;
++        }
++        var filter_str = "%s AND %s".printf (this.db_id, filter);
++        return (SQL_ALL_TEMPLATE.printf (filter_str));
++    }
++
++    protected override string get_sql_count_with_filter (string filter) {
++        if (filter.length == 0) {
++            return this.sql_count;
++        }
++        var filter_str = "%s AND %s".printf (this.db_id, filter);
++        return (SQL_COUNT_WITH_FILTER_TEMPLATE.printf (filter_str));
++    }
++
++    public Album (string         db_id,
++                  MediaContainer parent,
++                  string         title,
++                  LMS.Database   lms_db) {
++        base (db_id,
++              parent,
++              title,
++              lms_db,
++              get_sql_all (db_id),
++              get_sql_find_object (db_id),
++              get_sql_count (db_id));
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-albums.vala b/src/plugins/lms/rygel-lms-albums.vala
+new file mode 100644
+index 0000000..d2b13cd
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-albums.vala
+@@ -0,0 +1,174 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Sqlite;
++
++public class Rygel.LMS.Albums : Rygel.LMS.CategoryContainer {
++    private static const string SQL_ALL =
++        "SELECT audio_albums.id, audio_albums.name as title, " +
++               "audio_artists.name as artist " +
++        "FROM audio_albums " +
++        "LEFT JOIN audio_artists " +
++        "ON audio_albums.artist_id = audio_artists.id " +
++        "LIMIT ? OFFSET ?;";
++
++    private static const string SQL_ALL_WITH_FILTER_TEMPLATE =
++        "SELECT audio_albums.id, audio_albums.name as title, " +
++               "audio_artists.name as artist " +
++        "FROM audio_albums " +
++        "LEFT JOIN audio_artists " +
++        "ON audio_albums.artist_id = audio_artists.id " +
++        "WHERE %s " +
++        "LIMIT ? OFFSET ?;";
++
++    private static const string SQL_COUNT =
++        "SELECT COUNT(audio_albums.id) " +
++        "FROM audio_albums;";
++
++    private static const string SQL_COUNT_WITH_FILTER_TEMPLATE =
++        "SELECT COUNT(audio_albums.id), audio_albums.name as title, " +
++               "audio_artists.name as artist " +
++        "FROM audio_albums " +
++        "LEFT JOIN audio_artists " +
++        "ON audio_albums.artist_id = audio_artists.id " +
++        "WHERE %s;";
++
++    /* count songs inside albums */
++    private static const string SQL_CHILD_COUNT_WITH_FILTER_TEMPLATE =
++        "SELECT COUNT(audios.id), audios.title as title, " +
++               "audio_artists.name as artist " +
++        "FROM audios, files, audio_albums " +
++        "LEFT JOIN audio_artists " +
++        "ON audios.artist_id = audio_artists.id " +
++        "WHERE audios.id = files.id AND audios.album_id = audio_albums.id %s;";
++
++    /* select songs inside albums */
++    private static const string SQL_CHILD_ALL_WITH_FILTER_TEMPLATE =
++        "SELECT files.id, files.path, files.size, " +
++               "audios.title as title, audios.trackno, audios.length, audios.channels, audios.sampling_rate, audios.bitrate, audios.dlna_profile, audios.dlna_mime, " +
++               "audio_artists.name as artist, " +
++               "audio_albums.name, audio_albums.id " +
++        "FROM audios, files, audio_albums " +
++        "LEFT JOIN audio_artists " +
++        "ON audios.artist_id = audio_artists.id " +
++        "WHERE audios.id = files.id AND audios.album_id = audio_albums.id %s " +
++        "LIMIT ? OFFSET ?;";
++
++
++    private static const string SQL_FIND_OBJECT =
++        "SELECT audio_albums.id, audio_albums.name " +
++        "FROM audio_albums " +
++        "WHERE audio_albums.id = ?;";
++
++    protected override string get_sql_all_with_filter (string filter) {
++        if (filter.length == 0) {
++            return Albums.SQL_ALL;
++        }
++        return (Albums.SQL_ALL_WITH_FILTER_TEMPLATE.printf (filter));
++    }
++
++    protected override string get_sql_count_with_filter (string filter) {
++        if (filter.length == 0) {
++            return Albums.SQL_COUNT;
++        }
++        return (Albums.SQL_COUNT_WITH_FILTER_TEMPLATE.printf (filter));
++    }
++
++    protected override uint get_child_count_with_filter (string     where_filter,
++                                                        ValueArray args)
++    {
++
++        /* search the children (albums) as usual */
++        var count = base.get_child_count_with_filter (where_filter, args);
++
++        /* now search the album contents */
++        var filter = "";
++        if (where_filter.length > 0) {
++            filter = "AND %s".printf (where_filter);
++        }
++        var query = Albums.SQL_CHILD_COUNT_WITH_FILTER_TEMPLATE.printf (filter);
++        try {
++            var stmt = this.lms_db.prepare_and_init (query, args.values);
++            if (stmt.step () == Sqlite.ROW) {
++                count += stmt.column_int (0);
++            }
++        } catch (DatabaseError e) {
++            warning ("Query failed: %s", e.message);
++        }
++
++        return count;
++    }
++
++    protected override MediaObjects? get_children_with_filter (string     where_filter,
++                                                               ValueArray args,
++                                                               string     sort_criteria,
++                                                               uint       offset,
++                                                               uint       max_count) {
++        var children = base. get_children_with_filter (where_filter,
++                                                       args,
++                                                       sort_criteria,
++                                                       offset,
++                                                       max_count);
++        var filter = "";
++        if (where_filter.length > 0) {
++            filter = "AND %s".printf (where_filter);
++        }
++        var query = Albums.SQL_CHILD_ALL_WITH_FILTER_TEMPLATE.printf (filter);
++        try {
++            var stmt = this.lms_db.prepare_and_init (query, args.values);
++            while (Database.get_children_step (stmt)) {
++                var album_id = stmt.column_text (13);
++                var album = new Album (album_id, this, "", this.lms_db);
++
++                var song = album.object_from_statement (stmt);
++                song.parent_ref = song.parent;
++                children.add (song);
++                
++            }
++        } catch (DatabaseError e) {
++            warning ("Query failed: %s", e.message);
++        }
++
++        return children;
++    }
++
++    protected override MediaObject? object_from_statement (Statement statement) {
++        var id = "%d".printf (statement.column_int (0));
++        LMS.Album album = new LMS.Album (id,
++                                         this,
++                                         statement.column_text (1),
++                                         this.lms_db);
++        return album;
++    }
++
++    public Albums (MediaContainer parent,
++                   LMS.Database   lms_db) {
++        base ("albums",
++              parent,
++              _("Albums"),
++              lms_db,
++              Albums.SQL_ALL,
++              Albums.SQL_FIND_OBJECT,
++              Albums.SQL_COUNT);
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-all-images.vala b/src/plugins/lms/rygel-lms-all-images.vala
+new file mode 100644
+index 0000000..875889b
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-all-images.vala
+@@ -0,0 +1,81 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Sqlite;
++
++public class Rygel.LMS.AllImages : Rygel.LMS.CategoryContainer {
++    private static const string SQL_ALL =
++        "SELECT images.id, title, artist, date, width, height, path, size, dlna_profile, dlna_mime " +
++        "FROM images, files " +
++        "WHERE images.id = files.id " +
++        "LIMIT ? OFFSET ?;";
++
++    private static const string SQL_COUNT =
++        "SELECT count(images.id) " +
++        "FROM images, files " +
++        "WHERE images.id = files.id;";
++
++    private static const string SQL_FIND_OBJECT =
++        "SELECT images.id, title, artist, date, width, height, path, size, dlna_profile, dlna_mime " +
++        "FROM images, files " +
++        "WHERE files.id = ? AND images.id = files.id;";
++
++    protected override MediaObject? object_from_statement (Statement statement) {
++        var id = statement.column_int(0);
++        var path = statement.column_text(6);
++        var mime_type = statement.column_text(9);
++
++        if (mime_type == null || mime_type.length == 0){
++            /* TODO is this correct? */
++            debug ("Skipping music item %d (%s) with no MIME type",
++                   id,
++                   path);
++            return null;
++        }
++
++        var title = statement.column_text(1);
++        var image = new ImageItem(this.build_child_id (id), this, title);
++        image.creator = statement.column_text(2);
++        TimeVal tv = { (long) statement.column_int(3), (long) 0 };
++        image.date = tv.to_iso8601 ();
++        image.width = statement.column_int(4);
++        image.height = statement.column_int(5);
++        image.size = statement.column_int(7);
++        image.mime_type = mime_type;
++        image.dlna_profile = statement.column_text(8);
++        File file = File.new_for_path(path);
++        image.add_uri (file.get_uri ());
++
++        return image;
++    }
++
++    public AllImages (MediaContainer parent, LMS.Database lms_db) {
++        base ("all",
++              parent,
++              _("All"),
++              lms_db,
++              AllImages.SQL_ALL,
++              AllImages.SQL_FIND_OBJECT,
++              AllImages.SQL_COUNT);
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-all-music.vala b/src/plugins/lms/rygel-lms-all-music.vala
+new file mode 100644
+index 0000000..f856a92
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-all-music.vala
+@@ -0,0 +1,122 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Sqlite;
++
++public class Rygel.LMS.AllMusic : Rygel.LMS.CategoryContainer {
++    private static const string SQL_ALL_TEMPLATE =
++        "SELECT files.id, files.path, files.size, " +
++               "audios.title as title, audios.trackno, audios.length, audios.channels, audios.sampling_rate, audios.bitrate, audios.dlna_profile, audios.dlna_mime, " +
++               "audio_artists.name as artist, " +
++               "audio_albums.name " +
++        "FROM audios, files " +
++        "LEFT JOIN audio_artists " +
++        "ON audios.artist_id = audio_artists.id " +
++        "LEFT JOIN audio_albums " +
++        "ON audios.album_id = audio_albums.id " +
++        "WHERE audios.id = files.id %s " +
++        "LIMIT ? OFFSET ?;";
++
++    private static const string SQL_COUNT =
++        "SELECT COUNT(audios.id) " +
++        "FROM audios, files " +
++        "WHERE audios.id = files.id;";
++
++    private static const string SQL_COUNT_WITH_FILTER_TEMPLATE =
++        "SELECT COUNT(audios.id), audios.title as title, " +
++               "audio_artists.name as artist " +
++        "FROM audios, files " +
++        "LEFT JOIN audio_artists " +
++        "ON audios.artist_id = audio_artists.id " +
++        "WHERE audios.id = files.id %s;";
++
++    private static const string SQL_FIND_OBJECT =
++        "SELECT files.id, files.path, files.size, " +
++               "audios.title, audios.trackno, audios.length, audios.channels, audios.sampling_rate, audios.bitrate, audios.dlna_profile, audios.dlna_mime, " + 
++               "audio_artists.name, " +
++               "audio_albums.name " +
++        "FROM audios, files " +
++        "LEFT JOIN audio_artists " +
++        "ON audios.artist_id = audio_artists.id " +
++        "LEFT JOIN audio_albums " +
++        "ON audios.album_id = audio_albums.id " +
++        "WHERE files.id = ? AND audios.id = files.id;";
++
++    protected override string get_sql_all_with_filter (string filter) {
++        if (filter.length == 0) {
++            return this.sql_all;
++        }
++        var filter_str = "AND %s".printf (filter);
++        return (AllMusic.SQL_ALL_TEMPLATE.printf (filter_str));
++    }
++
++    protected override string get_sql_count_with_filter (string filter) {
++        if (filter.length == 0) {
++            return this.sql_count;
++        }
++        var filter_str = "AND %s".printf (filter);
++        return (AllMusic.SQL_COUNT_WITH_FILTER_TEMPLATE.printf (filter_str));
++    }
++
++    protected override MediaObject? object_from_statement (Statement statement) {
++        var id = statement.column_int (0);
++        var path = statement.column_text (1);
++        var mime_type = statement.column_text(10);
++
++        if (mime_type == null || mime_type.length == 0) {
++            /* TODO is this correct? */
++            debug ("Skipping music item %d (%s) with no MIME type",
++                   id,
++                   path);
++            return null;
++        }
++
++        var title = statement.column_text(3);
++        var song_id = this.build_child_id (id);
++        var song = new MusicItem (song_id, this, title);
++        song.size = statement.column_int(2);
++        song.track_number = statement.column_int(4);
++        song.duration = statement.column_int(5);
++        song.channels = statement.column_int(6);
++        song.sample_freq = statement.column_int(7); 
++        song.bitrate = statement.column_int(8);
++        song.dlna_profile = statement.column_text(9);
++        song.mime_type = mime_type;
++        song.artist = statement.column_text(11);
++        song.album = statement.column_text(12);
++        File file = File.new_for_path (path);
++        song.add_uri (file.get_uri ());
++
++        return song;
++    }
++
++    public AllMusic (MediaContainer parent, LMS.Database lms_db) {
++        base("all",
++             parent,
++             _("All"),
++             lms_db,
++             AllMusic.SQL_ALL_TEMPLATE.printf (""),
++             AllMusic.SQL_FIND_OBJECT,
++             AllMusic.SQL_COUNT);
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-all-videos.vala b/src/plugins/lms/rygel-lms-all-videos.vala
+new file mode 100644
+index 0000000..e1c021c
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-all-videos.vala
+@@ -0,0 +1,91 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Sqlite;
++
++public class Rygel.LMS.AllVideos : Rygel.LMS.CategoryContainer {
++    private static const string SQL_ALL =
++        "SELECT videos.id, title, artist, length, path, dtime, size, dlna_profile, dlna_mime " +
++        "FROM videos, files " +
++        "WHERE videos.id = files.id " +
++        "LIMIT ? OFFSET ?;";
++
++   private static const string SQL_COUNT =
++        "SELECT count(videos.id) " +
++        "FROM videos, files " +
++        "WHERE videos.id = files.id;";
++
++    private static const string SQL_FIND_OBJECT =
++        "SELECT videos.id, title, artist, length, path, dtime, size, dlna_profile, dlna_mime " +
++        "FROM videos, files " +
++        "WHERE files.id = ? AND videos.id = files.id;";
++
++    protected override MediaObject? object_from_statement (Statement statement) {
++        var id = statement.column_int(0);
++        var mime_type = statement.column_text(8);
++        var path = statement.column_text(4);
++        var file = File.new_for_path(path);
++
++        /* TODO: Temporary code to extract the MIME TYPE.  LMS does not seem
++           to compute the mime type of videos.  Don't know why. */
++
++        if (mime_type == null || mime_type.length == 0) {
++            try {
++                FileInfo info = file.query_info(FileAttribute.STANDARD_CONTENT_TYPE,
++                                                FileQueryInfoFlags.NONE, null);
++                mime_type = info.get_content_type();
++            } catch {}
++        }
++
++        if (mime_type == null || mime_type.length == 0) {
++            /* TODO is this correct? */
++            debug ("Skipping music item %d (%s) with no MIME type",
++                   id,
++                   path);
++            return null;
++            }
++
++        var title = statement.column_text(1);
++        var video = new VideoItem(this.build_child_id (id), this, title);
++        video.creator = statement.column_text(2);
++        video.duration = statement.column_int(3);
++        TimeVal tv = { (long) statement.column_int(5), (long) 0 };
++        video.date = tv.to_iso8601 ();
++        video.size = statement.column_int(6);
++        video.dlna_profile = statement.column_text(7);
++        video.mime_type = mime_type;
++        video.add_uri (file.get_uri ());
++
++        return video;
++    }
++
++    public AllVideos (string id, MediaContainer parent, string title, LMS.Database lms_db){
++        base (id,
++              parent,
++              title,
++              lms_db,
++              AllVideos.SQL_ALL,
++              AllVideos.SQL_FIND_OBJECT,
++              AllVideos.SQL_COUNT);
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-artist.vala b/src/plugins/lms/rygel-lms-artist.vala
+new file mode 100644
+index 0000000..bcabda3
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-artist.vala
+@@ -0,0 +1,72 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Sqlite;
++
++public class Rygel.LMS.Artist : Rygel.LMS.CategoryContainer {
++    private static const string SQL_ALL_TEMPLATE =
++        "SELECT audio_albums.id, audio_albums.name " +
++        "FROM audio_albums " +
++        "WHERE audio_albums.artist_id = %s " +
++        "LIMIT ? OFFSET ?;";
++
++    private static const string SQL_COUNT_TEMPLATE =
++        "SELECT COUNT(audio_albums.id) " +
++        "FROM audio_albums " +
++        "WHERE audio_albums.artist_id = %s";
++
++    private static const string SQL_FIND_OBJECT_TEMPLATE =
++        "SELECT audio_albums.id, audio_albums.name " +
++        "FROM audio_albums " +
++        "WHERE audio_albums.id = ? AND audio_albums.artist_id = %s;";
++
++    private static string get_sql_all (string id) {
++        return (SQL_ALL_TEMPLATE.printf (id));
++    }
++    private static string get_sql_find_object (string id) {
++        return (SQL_FIND_OBJECT_TEMPLATE.printf (id));
++    }
++    private static string get_sql_count (string id) {
++        return (SQL_COUNT_TEMPLATE.printf (id));
++    }
++
++    protected override MediaObject? object_from_statement (Statement statement) {
++        var db_id = "%d".printf (statement.column_int (0));
++        var title = statement.column_text (1);
++        return new LMS.Album (db_id, this, title, this.lms_db);
++    }
++
++    public Artist (string         id,
++                   MediaContainer parent,
++                   string         title,
++                   LMS.Database   lms_db) {
++
++        base (id,
++              parent,
++              title,
++              lms_db,
++              get_sql_all (id),
++              get_sql_find_object (id),
++              get_sql_count (id));
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-artists.vala b/src/plugins/lms/rygel-lms-artists.vala
+new file mode 100644
+index 0000000..ebec2c3
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-artists.vala
+@@ -0,0 +1,60 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Sqlite;
++
++public class Rygel.LMS.Artists : Rygel.LMS.CategoryContainer {
++    private static const string SQL_ALL =
++        "SELECT audio_artists.id, audio_artists.name " +
++        "FROM audio_artists " +
++        "LIMIT ? OFFSET ?;";
++
++    private static const string SQL_COUNT =
++        "SELECT COUNT(audio_artists.id) " +
++        "FROM audio_artists;";
++
++    private static const string SQL_FIND_OBJECT =
++        "SELECT audio_artists.id, audio_artists.name " +
++        "FROM audio_artists " +
++        "WHERE audio_artists.id = ?;";
++
++    protected override MediaObject? object_from_statement (Statement statement) {
++        var db_id = "%d".printf (statement.column_int (0));
++        var title = statement.column_text (1);
++
++        return new LMS.Artist (db_id, this, title, this.lms_db);
++    }
++
++    public Artists (string id,
++                    MediaContainer parent,
++                    string title,
++                    LMS.Database   lms_db) {
++        base (id,
++              parent,
++              title,
++              lms_db,
++              Artists.SQL_ALL,
++              Artists.SQL_FIND_OBJECT,
++              Artists.SQL_COUNT);
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-category-container.vala b/src/plugins/lms/rygel-lms-category-container.vala
+new file mode 100644
+index 0000000..5b4d7ba
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-category-container.vala
+@@ -0,0 +1,376 @@
++/*
++ * Copyright (C) 2009,2010 Jens Georg <mail@jensge.org>,
++ *           (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Gee;
++using Sqlite;
++
++public errordomain Rygel.LMS.CategoryContainerError {
++    SQLITE_ERROR,
++    GENERAL_ERROR,
++    INVALID_TYPE,
++    UNSUPPORTED_SEARCH
++}
++
++public abstract class Rygel.LMS.CategoryContainer : Rygel.MediaContainer,
++                                                    Rygel.SearchableContainer {
++    public ArrayList<string> search_classes { get; set; }
++
++    public unowned LMS.Database lms_db { get; construct; }
++
++    public string db_id { get; construct; }
++
++    public string sql_all { get; construct; }
++    public string sql_find_object { get; construct; }
++    public string sql_count { get; construct; }
++
++    protected Statement stmt_all;
++    protected Statement stmt_find_object;
++
++    protected string child_prefix;
++    protected string ref_prefix;
++
++    protected abstract MediaObject? object_from_statement (Statement statement);
++
++    /* TODO these should be abstract */
++    protected virtual string get_sql_all_with_filter (string filter) {
++        return this.sql_all;
++    }
++    protected virtual string get_sql_count_with_filter (string filter) {
++        return this.sql_count;
++    }
++
++    private static string? map_operand_to_column (string     operand,
++                                                  out string? collate = null,
++                                                  bool        for_sort = false)
++                                                  throws Error {
++        string column = null;
++        bool use_collation = false;
++
++        // TODO add all used aliases to sql queries
++        switch (operand) {
++            case "dc:title":
++                column = "title";
++                use_collation = true;
++                break;
++            case "upnp:artist":
++                column = "artist";
++                use_collation = true;
++                break;
++            case "dc:creator":
++                column = "creator";
++                use_collation = true;
++                break;
++            default:
++                var message = "Unsupported column %s".printf (operand);
++
++                throw new CategoryContainerError.UNSUPPORTED_SEARCH (message);
++        }
++
++        if (use_collation) {
++            collate = "COLLATE CASEFOLD";
++        } else {
++            collate = "";
++        }
++
++        return column;
++    }
++
++    private static string? relational_expression_to_sql
++                                        (RelationalExpression exp,
++                                         GLib.ValueArray      args)
++                                         throws Error {
++        GLib.Value? v = null;
++        string collate = null;
++
++        string column = CategoryContainer.map_operand_to_column (exp.operand1,
++                                                                 out collate);
++        SqlOperator operator;
++
++        switch (exp.op) {
++            case GUPnP.SearchCriteriaOp.EXISTS:
++                string sql_function;
++                if (exp.operand2 == "true") {
++                    sql_function = "%s IS NOT NULL AND %s != ''";
++                } else {
++                    sql_function = "%s IS NULL OR %s = ''";
++                }
++
++                return sql_function.printf (column, column);
++            case GUPnP.SearchCriteriaOp.EQ:
++            case GUPnP.SearchCriteriaOp.NEQ:
++            case GUPnP.SearchCriteriaOp.LESS:
++            case GUPnP.SearchCriteriaOp.LEQ:
++            case GUPnP.SearchCriteriaOp.GREATER:
++            case GUPnP.SearchCriteriaOp.GEQ:
++                v = exp.operand2;
++                operator = new SqlOperator.from_search_criteria_op
++                                            (exp.op, column, collate);
++                break;
++            case GUPnP.SearchCriteriaOp.CONTAINS:
++                operator = new SqlFunction ("contains", column);
++                v = exp.operand2;
++                break;
++            case GUPnP.SearchCriteriaOp.DOES_NOT_CONTAIN:
++                operator = new SqlFunction ("NOT contains", column);
++                v = exp.operand2;
++                break;
++            case GUPnP.SearchCriteriaOp.DERIVED_FROM:
++                operator = new SqlOperator ("LIKE", column);
++                v = "%s%%".printf (exp.operand2);
++                break;
++            default:
++                warning ("Unsupported op %d", exp.op);
++                return null;
++        }
++
++        if (v != null) {
++            args.append (v);
++        }
++
++        return operator.to_string ();
++    }
++
++    private static string logical_expression_to_sql
++                                        (LogicalExpression expression,
++                                         GLib.ValueArray   args)
++                                         throws Error {
++        string left_sql_string = CategoryContainer.search_expression_to_sql
++                                        (expression.operand1,
++                                         args);
++        string right_sql_string = CategoryContainer.search_expression_to_sql
++                                        (expression.operand2,
++                                         args);
++        unowned string operator_sql_string = "OR";
++
++        if (expression.op == LogicalOperator.AND) {
++            operator_sql_string = "AND";
++        }
++
++        return "(%s %s %s)".printf (left_sql_string,
++                                    operator_sql_string,
++                                    right_sql_string);
++    }
++
++    private static string? search_expression_to_sql
++                                        (SearchExpression? expression,
++                                         GLib.ValueArray   args)
++                                         throws Error {
++        if (expression == null) {
++            return "";
++        }
++
++        if (expression is LogicalExpression) {
++            return CategoryContainer.logical_expression_to_sql
++                                        (expression as LogicalExpression, args);
++        } else {
++            return CategoryContainer.relational_expression_to_sql
++                                        (expression as RelationalExpression,
++                                         args);
++        }
++    }
++
++    protected virtual uint get_child_count_with_filter (string     where_filter,
++                                                        ValueArray args)
++    {
++        var query = this.get_sql_count_with_filter (where_filter);
++        try {
++            var stmt = this.lms_db.prepare_and_init (query, args.values);
++            if (stmt.step () != Sqlite.ROW) {
++                return 0;
++            }
++            return stmt.column_int (0);
++        } catch (DatabaseError e) {
++            warning ("Query failed: %s", e.message);
++            return 0;
++        }
++    }
++
++    protected virtual MediaObjects? get_children_with_filter (string     where_filter,
++                                                              ValueArray args,
++                                                              string     sort_criteria,
++                                                              uint       offset,
++                                                              uint       max_count) {
++        var children = new MediaObjects ();
++        GLib.Value v = max_count;
++        args.append (v);
++        v = offset;
++        args.append (v);
++
++        var query = this.get_sql_all_with_filter (where_filter);
++        try {
++            var stmt = this.lms_db.prepare_and_init (query, args.values);
++            while (Database.get_children_step (stmt)) {
++                children.add (this.object_from_statement (stmt));
++            }
++        } catch (DatabaseError e) {
++            warning ("Query failed: %s", e.message);
++        }
++
++        return children;
++    }
++
++    public async MediaObjects? search (SearchExpression? expression,
++                                       uint offset,
++                                       uint max_count,
++                                       out uint total_matches,
++                                       string sort_criteria,
++                                       Cancellable? cancellable)
++                                        throws Error {
++        debug ("search()");
++        try {
++            var args = new GLib.ValueArray (0);
++            var filter = CategoryContainer.search_expression_to_sql (expression,
++                                                                     args);
++            total_matches = this.get_child_count_with_filter (filter, args);
++
++            if (expression != null) {
++                debug ("  Original search: %s", expression.to_string ());
++                debug ("  Parsed search expression: %s", filter);
++                debug ("  Filtered cild count is %u", total_matches);
++            }
++
++            if (max_count == 0) {
++                max_count = uint.MAX;
++            }
++            return this.get_children_with_filter (filter,
++                                                  args,
++                                                  sort_criteria,
++                                                  offset,
++                                                  max_count);
++        } catch (Error e) {
++            debug ("  Falling back to simple_search(): %s", e.message);
++            return yield this.simple_search (expression,
++                                             offset,
++                                             max_count,
++                                             out total_matches,
++                                             sort_criteria,
++                                             cancellable);
++        }
++    }
++
++    public async override MediaObjects? get_children (uint offset,
++                                                      uint max_count,
++                                                      string sort_criteria,
++                                                      Cancellable? cancellable)
++                                        throws Error {
++        MediaObjects retval = new MediaObjects ();
++
++        Database.get_children_init (this.stmt_all,
++                                    offset,
++                                    max_count,
++                                    sort_criteria);
++        while (Database.get_children_step (this.stmt_all)) {
++            retval.add (this.object_from_statement (this.stmt_all));
++        }
++
++        return retval;
++    }
++
++    public async override MediaObject? find_object (string id, 
++                                                    Cancellable? cancellable)
++                                        throws Error {
++        if (!id.has_prefix (this.child_prefix)) {
++            /* can't match anything in this container */
++            return null;
++        }
++
++        MediaObject object = null;
++
++        /* remove parent section from id */
++        var real_id = id.substring (this.child_prefix.length);
++        /* remove grandchildren from id */
++        var index = real_id.index_of_char (':');
++        if (index > 0) {
++            real_id = real_id.slice (0, index);
++        }
++
++        try {
++            Database.find_object (real_id, this.stmt_find_object);
++            var child = this.object_from_statement (this.stmt_find_object);
++            if (index < 0) {
++                object = child;
++            } else {
++                /* try grandchildren */
++                var container = child as CategoryContainer; 
++                object = yield container.find_object (id, cancellable);
++
++                /* tell object to keep a reference to the parent --
++                 * otherwise parent is freed before object is serialized */
++                object.parent_ref = object.parent;
++            }
++        } catch (DatabaseError e) {
++            debug ("find_object %s in %s: %s", id, this.id, e.message);
++            /* Happens e.g. if id is not an integer */
++        }
++
++        return object;
++    }
++
++    protected string build_child_id (int db_id) {
++        return "%s%d".printf (this.child_prefix, db_id);
++    }
++
++    protected string build_reference_id (int db_id) {
++        return "%s%d".printf (this.ref_prefix, db_id);
++    }
++
++    public CategoryContainer (string db_id,
++                              MediaContainer parent,
++                              string title,
++                              LMS.Database lms_db,
++                              string sql_all,
++                              string sql_find_object,
++                              string sql_count) {
++        Object (id : "%s:%s".printf (parent.id, db_id),
++                db_id : db_id,
++                parent : parent,
++                title : title,
++                lms_db : lms_db,
++                sql_all : sql_all,
++                sql_find_object : sql_find_object,
++                sql_count : sql_count);
++    }
++
++    construct {
++        this.search_classes = new ArrayList<string> ();
++
++        this.child_prefix = "%s:".printf (this.id);
++
++        var index = this.id.index_of_char (':');
++        this.ref_prefix = this.id.slice (0, index) + ":all:";
++
++        try {
++            this.stmt_all = this.lms_db.prepare (this.sql_all);
++            this.stmt_find_object = this.lms_db.prepare (this.sql_find_object);
++            var stmt_count = this.lms_db.prepare (this.sql_count);
++
++            if (stmt_count.step () == Sqlite.ROW) {
++                this.child_count = stmt_count.column_int (0);
++            }
++        } catch (DatabaseError e) {
++            warning ("Container %s: %s", this.title, e.message);
++        }
++
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-collate.c b/src/plugins/lms/rygel-lms-collate.c
+new file mode 100644
+index 0000000..8eee80b
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-collate.c
+@@ -0,0 +1,49 @@
++/*
++ * Copyright (C) 2012 Jens Georg <mail@jensge.org>.
++ *
++ * Author: Jens Georg <mail@jensge.org>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++#include <glib.h>
++
++#ifdef HAVE_UNISTRING
++#   include <unistr.h>
++#endif
++
++gint rygel_lms_utf8_collate_str (const char *a, gsize alen,
++                                 const char *b, gsize blen)
++{
++    char *a_str, *b_str;
++    gint result;
++
++    /* Make sure the passed strings are null terminated */
++    a_str = g_strndup (a, alen);
++    b_str = g_strndup (b, blen);
++
++#ifdef HAVE_UNISTRING
++    result = u8_strcoll (a_str, b_str);
++#else
++    return g_utf8_collate (a_str, b_str);
++#endif
++
++    g_free (a_str);
++    g_free (b_str);
++
++    return result;
++}
+diff --git a/src/plugins/lms/rygel-lms-database.vala b/src/plugins/lms/rygel-lms-database.vala
+new file mode 100644
+index 0000000..2108ae6
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-database.vala
+@@ -0,0 +1,226 @@
++/*
++ * Copyright (C) 2009,2011 Jens Georg <mail@jensge.org>,
++ *           (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Gee;
++using Sqlite;
++
++public errordomain Rygel.LMS.DatabaseError {
++    OPEN,
++    PREPARE,
++    BIND,
++    STEP,
++    NOT_FOUND
++}
++
++namespace Rygel.LMS {
++    extern static int utf8_collate_str (uint8[] a, uint8[] b);
++}
++
++public class Rygel.LMS.Database {
++    private Sqlite.Database db;
++
++    /**
++     * Function to implement the custom SQL function 'contains'
++     */
++    private static void utf8_contains (Sqlite.Context context,
++                                       Sqlite.Value[] args)
++                                       requires (args.length == 2) {
++        if (args[0].to_text () == null ||
++            args[1].to_text () == null) {
++           context.result_int (0);
++
++           return;
++        }
++
++        var pattern = Regex.escape_string (args[1].to_text ());
++        if (Regex.match_simple (pattern,
++                                args[0].to_text (),
++                                RegexCompileFlags.CASELESS)) {
++            context.result_int (1);
++        } else {
++            context.result_int (0);
++        }
++    }
++
++    /**
++     * Function to implement the custom SQLite collation 'CASEFOLD'.
++     *
++     * Uses utf8 case-fold to compare the strings.
++     */
++    private static int utf8_collate (int alen, void* a, int blen, void* b) {
++        // unowned to prevent array copy
++        unowned uint8[] _a = (uint8[]) a;
++        _a.length = alen;
++
++        unowned uint8[] _b = (uint8[]) b;
++        _b.length = blen;
++
++        return LMS.utf8_collate_str (_a, _b);
++    }
++
++    public Database (string db_path) throws DatabaseError {
++        Sqlite.Database.open (db_path, out this.db);
++        if (this.db.errcode () != Sqlite.OK) {
++            throw new DatabaseError.OPEN ("Failed to open '%s': %d",
++                                          db_path,
++                                          this.db.errcode);
++        }
++
++        this.db.create_function ("contains",
++                                 2,
++                                 Sqlite.UTF8,
++                                 null,
++                                 LMS.Database.utf8_contains,
++                                 null,
++                                 null);
++
++        this.db.create_collation ("CASEFOLD",
++                                  Sqlite.UTF8,
++                                  LMS.Database.utf8_collate);
++    }
++
++    public Statement prepare (string query_string) throws DatabaseError {
++        Statement statement;
++
++        var err = this.db.prepare_v2 (query_string, -1, out statement);
++        if (err != Sqlite.OK)
++            throw new DatabaseError.PREPARE ("Unable to create statement '%s': %d",
++                                             query_string,
++                                             err);
++        return statement;
++    }
++
++
++    public Statement prepare_and_init (string   query,
++                                       GLib.Value[]? arguments)
++                                        throws DatabaseError {
++
++        Statement statement;
++
++        var err = this.db.prepare_v2 (query, -1, out statement);
++        if (err != Sqlite.OK)
++            throw new DatabaseError.PREPARE ("Unable to create statement '%s': %d",
++                                             query,
++                                             err);
++
++        for (var i = 1; i <= arguments.length; ++i) {
++            int sqlite_err;
++            unowned GLib.Value current_value = arguments[i - 1];
++
++            if (current_value.holds (typeof (int))) {
++                sqlite_err = statement.bind_int (i, current_value.get_int ());
++                if (sqlite_err != Sqlite.OK)
++                    throw new DatabaseError.BIND("Unable to bind value %d",
++                                                 sqlite_err);
++            } else if (current_value.holds (typeof (int64))) {
++                sqlite_err = statement.bind_int64 (i, current_value.get_int64 ());
++                if (sqlite_err != Sqlite.OK)
++                    throw new DatabaseError.BIND("Unable to bind value %d",
++                                                 sqlite_err);
++            } else if (current_value.holds (typeof (uint64))) {
++                sqlite_err = statement.bind_int64 (i, (int64) current_value.get_uint64 ());
++                if (sqlite_err != Sqlite.OK)
++                    throw new DatabaseError.BIND("Unable to bind value %d",
++                                                 sqlite_err);
++            } else if (current_value.holds (typeof (long))) {
++                sqlite_err = statement.bind_int64 (i, current_value.get_long ());
++                if (sqlite_err != Sqlite.OK)
++                    throw new DatabaseError.BIND("Unable to bind value %d",
++                                                 sqlite_err);
++            } else if (current_value.holds (typeof (uint))) {
++                sqlite_err = statement.bind_int64 (i, current_value.get_uint ());
++                if (sqlite_err != Sqlite.OK)
++                    throw new DatabaseError.BIND("Unable to bind value %d",
++                                                 sqlite_err);
++            } else if (current_value.holds (typeof (string))) {
++                sqlite_err = statement.bind_text (i, current_value.get_string ());
++                if (sqlite_err != Sqlite.OK)
++                    throw new DatabaseError.BIND("Unable to bind value %d",
++                                                 sqlite_err);
++            } else if (current_value.holds (typeof (void *))) {
++                if (current_value.peek_pointer () == null) {
++                    sqlite_err = statement.bind_null (i);
++                    if (sqlite_err != Sqlite.OK)
++                        throw new DatabaseError.BIND("Unable to bind value %d",
++                                                     sqlite_err);
++                } else {
++                    assert_not_reached ();
++                }
++            } else {
++                var type = current_value.type ();
++                warning (_("Unsupported type %s"), type.name ());
++                assert_not_reached ();
++            }
++        }
++
++        return statement;
++    }
++
++    public static void find_object(string id, Statement stmt) throws DatabaseError {
++
++        (void) stmt.reset();
++
++        int integer_id = int.parse(id);
++        int sqlite_err = stmt.bind_int(1, integer_id);
++        if (sqlite_err != Sqlite.OK)
++            throw new DatabaseError.BIND("Unable to bind id %d", sqlite_err);
++
++        sqlite_err = stmt.step();
++        if (sqlite_err != Sqlite.ROW)
++            throw new DatabaseError.STEP("Unable to find id %s", id);
++    }
++
++    public static void get_children_init (Statement stmt,
++        uint offset, uint max_count, string sort_criteria) throws DatabaseError {
++
++        int sqlite_err;
++
++        (void) stmt.reset();
++
++        sqlite_err = stmt.bind_int(1, (int) max_count);
++        if (sqlite_err != Sqlite.OK)
++            throw new DatabaseError.BIND("Unable to bind max_count %d",
++                                         sqlite_err);
++
++        sqlite_err = stmt.bind_int(2, (int) offset);
++        if (sqlite_err != Sqlite.OK)
++            throw new DatabaseError.BIND("Unable to bind offset %d",
++                                         sqlite_err);
++    }
++
++    public static bool get_children_step(Statement stmt) throws DatabaseError {
++
++        bool retval;
++        int sqlite_err;
++
++        sqlite_err = stmt.step();
++        retval = sqlite_err == Sqlite.ROW;
++
++        if (!retval && (sqlite_err != Sqlite.DONE))
++            throw new DatabaseError.STEP("Error iterating through rows %d",
++                                         sqlite_err);
++
++        return retval;
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-image-root.vala b/src/plugins/lms/rygel-lms-image-root.vala
+new file mode 100644
+index 0000000..466bbe2
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-image-root.vala
+@@ -0,0 +1,35 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++
++public class Rygel.LMS.ImageRoot : Rygel.SimpleContainer {
++    public ImageRoot (string         id,
++                      MediaContainer parent,
++                      string         title,
++                      LMS.Database   lms_db) {
++        base (id, parent, title);
++
++        this.add_child_container (new AllImages (this, lms_db));
++        this.add_child_container (new ImageYears (this, lms_db));
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-image-year.vala b/src/plugins/lms/rygel-lms-image-year.vala
+new file mode 100644
+index 0000000..1c32b71
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-image-year.vala
+@@ -0,0 +1,94 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Sqlite;
++
++public class Rygel.LMS.ImageYear : Rygel.LMS.CategoryContainer {
++    private static const string SQL_ALL_TEMPLATE =
++        "SELECT images.id, title, artist, date, width, height, path, size, dlna_profile, dlna_mime, strftime('%Y', date, 'unixepoch') as year " +
++        "FROM images, files " +
++        "WHERE images.id = files.id AND year = '%s' " +
++        "LIMIT ? OFFSET ?;";
++
++    private static const string SQL_COUNT_TEMPLATE =
++        "SELECT count(images.id), strftime('%Y', date, 'unixepoch') as year " +
++        "FROM images, files " +
++        "WHERE images.id = files.id AND year = '%s';";
++
++    private static const string SQL_FIND_OBJECT_TEMPLATE =
++        "SELECT images.id, title, artist, date, width, height, path, size, dlna_profile, dlna_mime, strftime('%Y', date, 'unixepoch') as year " +
++        "FROM images, files " +
++        "WHERE files.id = ? AND images.id = files.id AND year = '%s';";
++
++    protected override MediaObject? object_from_statement (Statement statement) {
++        var id = statement.column_int(0);
++        var path = statement.column_text(6);
++        var mime_type = statement.column_text(9);
++
++        if (mime_type == null || mime_type.length == 0){
++            /* TODO is this correct? */
++            debug ("Skipping music item %d (%s) with no MIME type",
++                   id,
++                   path);
++            return null;
++        }
++
++        var title = statement.column_text(1);
++        var image = new ImageItem(this.build_child_id (id), this, title);
++        image.ref_id = this.build_reference_id (id);
++        image.creator = statement.column_text(2);
++        TimeVal tv = { (long) statement.column_int(3), (long) 0 };
++        image.date = tv.to_iso8601 ();
++        image.width = statement.column_int(4);
++        image.height = statement.column_int(5);
++        image.size = statement.column_int(7);
++        image.mime_type = mime_type;
++        image.dlna_profile = statement.column_text(8);
++        File file = File.new_for_path(path);
++        image.add_uri (file.get_uri ());
++
++        return image;
++    }
++
++    private static string get_sql_all (string year) {
++        return (SQL_ALL_TEMPLATE.printf (year));
++    }
++    private static string get_sql_find_object (string year) {
++        return (SQL_FIND_OBJECT_TEMPLATE.printf (year));
++    }
++    private static string get_sql_count (string year) {
++        return (SQL_COUNT_TEMPLATE.printf (year));
++    }
++
++    public ImageYear (MediaContainer parent,
++                      string         year,
++                      LMS.Database   lms_db) {
++        base ("%s".printf (year),
++              parent,
++              year,
++              lms_db,
++              get_sql_all (year),
++              get_sql_find_object (year),
++              get_sql_count (year));
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-image-years.vala b/src/plugins/lms/rygel-lms-image-years.vala
+new file mode 100644
+index 0000000..8741539
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-image-years.vala
+@@ -0,0 +1,57 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++using Sqlite;
++
++public class Rygel.LMS.ImageYears : Rygel.LMS.CategoryContainer {
++    private static const string SQL_ALL =
++        "SELECT DISTINCT(strftime('%Y', images.date, 'unixepoch')) as year " +
++        "FROM images " + 
++        "LIMIT ? OFFSET ?;";
++
++    private static const string SQL_COUNT =
++        "SELECT COUNT(DISTINCT(strftime('%Y', images.date, 'unixepoch'))) " +
++        "FROM images;";
++
++    /* actually returns multiple times the same result (because no DISTINCT) */
++    /* Casting the year is a workaround so we can keep using
++     * Database.find_object() without making the argument a variant or something like it*/
++    private static const string SQL_FIND_OBJECT =
++        "SELECT strftime('%Y', images.date, 'unixepoch') as year " +
++        "FROM images " +
++        "WHERE year = CAST(? AS TEXT)";
++
++    protected override MediaObject? object_from_statement (Statement statement) {
++        return new LMS.ImageYear (this, statement.column_text (0), this.lms_db);
++    }
++
++    public ImageYears (MediaContainer parent, LMS.Database lms_db) {
++        base ("years",
++              parent,
++              _("Years"),
++              lms_db,
++              ImageYears.SQL_ALL,
++              ImageYears.SQL_FIND_OBJECT,
++              ImageYears.SQL_COUNT);
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-music-root.vala b/src/plugins/lms/rygel-lms-music-root.vala
+new file mode 100644
+index 0000000..7b1eb0f
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-music-root.vala
+@@ -0,0 +1,36 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++
++public class Rygel.LMS.MusicRoot : Rygel.SimpleContainer {
++    public MusicRoot (string         id,
++                      MediaContainer parent,
++                      string         title,
++                      LMS.Database   lms_db) {
++        base (id, parent, title);
++
++        this.add_child_container (new AllMusic (this, lms_db));
++        this.add_child_container (new Artists ("artists", this, _("Artists"), lms_db));
++        this.add_child_container (new Albums (this, lms_db));
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-plugin-factory.vala b/src/plugins/lms/rygel-lms-plugin-factory.vala
+new file mode 100644
+index 0000000..9fa8ccd
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-plugin-factory.vala
+@@ -0,0 +1,40 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++
++private Rygel.LMS.PluginFactory plugin_factory;
++
++public void module_init(PluginLoader loader) {
++        plugin_factory = new Rygel.LMS.PluginFactory(loader);
++}
++
++public class Rygel.LMS.PluginFactory {
++
++    PluginLoader loader;
++
++    public PluginFactory(PluginLoader loader) {
++        this.loader = loader;
++        this.loader.add_plugin(new LMS.Plugin());
++    }
++
++}
+diff --git a/src/plugins/lms/rygel-lms-plugin.vala b/src/plugins/lms/rygel-lms-plugin.vala
+new file mode 100644
+index 0000000..a6727f5
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-plugin.vala
+@@ -0,0 +1,35 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++
++public class Rygel.LMS.Plugin : Rygel.MediaServerPlugin {
++    public const string NAME = "LMS";
++
++    private static RootContainer root;
++
++    public Plugin() {
++        if (root == null)
++            root = new RootContainer();
++        base(root, Plugin.NAME, null, 0);
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-root-container.vala b/src/plugins/lms/rygel-lms-root-container.vala
+new file mode 100644
+index 0000000..67dd5ed
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-root-container.vala
+@@ -0,0 +1,66 @@
++/*
++ * Copyright (C) 2013 Intel Corporation.
++ *
++ * Author: Jussi Kukkonen <jussi.kukkonen@intel.com>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using Rygel;
++
++using Sqlite;
++
++public class Rygel.LMS.RootContainer : Rygel.SimpleContainer {
++
++    private LMS.Database lms_db = null;
++
++    public RootContainer() {
++        var config = MetaConfig.get_default ();
++
++        var title = _("Shared media");
++        try {
++            title = config.get_string ("LightMediaScanner", "title");
++        } catch (GLib.Error error) {}
++
++        base.root(title);
++
++        string db_path;
++        try {
++            db_path = config.get_string ("LightMediaScanner", "db-path");
++            debug ("Using sqlite database location '%s'", db_path);
++        } catch (GLib.Error error) {
++            db_path = Environment.get_user_config_dir() +
++                      "/lightmediascannerd/db.sqlite3";
++            debug  ("Using default sqlite database location %s", db_path);
++        }
++
++        try {
++            this.lms_db = new LMS.Database (db_path);
++
++            this.add_child_container (new Artists ("artists", this, _("Music"), this.lms_db));
++            this.add_child_container (new AllVideos ("all-videos", this, _("Videos"), this.lms_db));
++            this.add_child_container (new ImageRoot ("images", this, _("Pictures"), this.lms_db));
++
++        } catch (DatabaseError e) {
++            warning ("%s\n", e.message);
++
++            /* TODO if db does not exist we should
++               wait for it to be created and then add folders.  Best to wait for the
++               LMS notification API. */
++        }
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-sql-function.vala b/src/plugins/lms/rygel-lms-sql-function.vala
+new file mode 100644
+index 0000000..e8580cc
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-sql-function.vala
+@@ -0,0 +1,31 @@
++/*
++ * Copyright (C) 2010 Jens Georg <mail@jensge.org>.
++ *
++ * Author: Jens Georg <mail@jensge.org>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++internal class Rygel.LMS.SqlFunction : SqlOperator {
++    public SqlFunction (string name, string arg) {
++        base (name, arg);
++    }
++
++    public override string to_string () {
++        return "%s(%s,?)".printf (name, arg);
++    }
++}
+diff --git a/src/plugins/lms/rygel-lms-sql-operator.vala b/src/plugins/lms/rygel-lms-sql-operator.vala
+new file mode 100644
+index 0000000..fc4e907
+--- /dev/null
++++ b/src/plugins/lms/rygel-lms-sql-operator.vala
+@@ -0,0 +1,73 @@
++/*
++ * Copyright (C) 2010 Jens Georg <mail@jensge.org>.
++ *
++ * Author: Jens Georg <mail@jensge.org>
++ *
++ * This file is part of Rygel.
++ *
++ * Rygel is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Rygel is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
++ */
++
++using GUPnP;
++
++internal class Rygel.LMS.SqlOperator : GLib.Object {
++    protected string name;
++    protected string arg;
++    protected string collate;
++
++    public SqlOperator (string name,
++                        string arg,
++                        string collate = "") {
++        this.name = name;
++        this.arg = arg;
++        this.collate = collate;
++    }
++
++    public SqlOperator.from_search_criteria_op (SearchCriteriaOp op,
++                                                string           arg,
++                                                string           collate) {
++        string sql = null;
++        switch (op) {
++            case SearchCriteriaOp.EQ:
++                sql = "=";
++                break;
++            case SearchCriteriaOp.NEQ:
++                sql = "!=";
++                break;
++            case SearchCriteriaOp.LESS:
++                sql = "<";
++                break;
++            case SearchCriteriaOp.LEQ:
++                sql = "<=";
++                break;
++            case SearchCriteriaOp.GREATER:
++                sql = ">";
++                break;
++            case SearchCriteriaOp.GEQ:
++                sql = ">=";
++                break;
++            default:
++                assert_not_reached ();
++        }
++
++        this (sql, arg, collate);
++    }
++
++    public virtual string to_string () {
++        return "(%s %s ? %s)".printf (arg, name, collate);
++    }
++}
++
++
+-- 
+2.0.1
+

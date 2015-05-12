@@ -1,0 +1,64 @@
+diff -rupN PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtCore/qpycore.pro PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtCore/qpycore.pro
+--- PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtCore/qpycore.pro	2013-06-03 03:31:25.000000000 +0200
++++ PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtCore/qpycore.pro	2013-06-07 23:02:28.633213505 +0200
+@@ -23,6 +23,9 @@ CONFIG      += static warn_on
+ TARGET      = qpycore
+ TEMPLATE    = lib
+ 
++CONFIG += link_pkgconfig
++PKGCONFIG += python
++
+ # Python's type system relies on type punning.
+ !win32: QMAKE_CXXFLAGS += -fno-strict-aliasing
+ 
+diff -rupN PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtDBus/qpydbus.pro PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtDBus/qpydbus.pro
+--- PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtDBus/qpydbus.pro	2013-06-03 03:31:25.000000000 +0200
++++ PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtDBus/qpydbus.pro	2013-06-07 23:03:31.173213849 +0200
+@@ -24,6 +24,9 @@ CONFIG      += static warn_on
+ TARGET      = qpydbus
+ TEMPLATE    = lib
+ 
++CONFIG += link_pkgconfig
++PKGCONFIG += python
++
+ SOURCES   = \
+             qpydbus_chimera_helpers.cpp \
+             qpydbus_post_init.cpp \
+diff -rupN PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtDesigner/qpydesigner.pro PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtDesigner/qpydesigner.pro
+--- PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtDesigner/qpydesigner.pro	2013-06-03 03:31:25.000000000 +0200
++++ PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtDesigner/qpydesigner.pro	2013-06-07 23:03:40.753213901 +0200
+@@ -24,6 +24,9 @@ QT          += designer
+ TARGET      = qpydesigner
+ TEMPLATE    = lib
+ 
++CONFIG += link_pkgconfig
++PKGCONFIG += python
++
+ HEADERS   = \
+             qpydesignercontainerextension.h \
+             qpydesignercustomwidgetcollectionplugin.h \
+diff -rupN PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtGui/qpygui.pro PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtGui/qpygui.pro
+--- PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtGui/qpygui.pro	2013-06-03 03:31:25.000000000 +0200
++++ PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtGui/qpygui.pro	2013-06-07 23:03:50.573213955 +0200
+@@ -22,5 +22,8 @@ CONFIG      += static warn_on
+ TARGET      = qpygui
+ TEMPLATE    = lib
+ 
++CONFIG += link_pkgconfig
++PKGCONFIG += python
++
+ HEADERS   = \
+             qpytextobject.h
+diff -rupN PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtOpenGL/qpyopengl.pro PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtOpenGL/qpyopengl.pro
+--- PyQt-gpl-5.0-snapshot-036f09c3b943/qpy/QtOpenGL/qpyopengl.pro	2013-06-03 03:31:25.000000000 +0200
++++ PyQt-gpl-5.0-snapshot-036f09c3b943.new/qpy/QtOpenGL/qpyopengl.pro	2013-06-07 23:04:00.025214007 +0200
+@@ -24,6 +24,9 @@ CONFIG      += static warn_on
+ TARGET      = qpyopengl
+ TEMPLATE    = lib
+ 
++CONFIG += link_pkgconfig
++PKGCONFIG += python
++
+ SOURCES   = \
+             qpyopengl_attribute_array.cpp \
+             qpyopengl_uniform_value_array.cpp

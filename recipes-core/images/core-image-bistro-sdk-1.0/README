@@ -1,0 +1,120 @@
+Pelagicore Bistro %%%MACHINE%%% SDK
+
+Outline
+1. Installing the SDK
+2. SDK content
+3. How-to
+4. Known issues
+
+
+0. Package Content
+- %%%IMAGE%%% -- SD-card image ready to boot
+- %%%SDK%%% -- Shellscript to install the SDK
+
+
+1. Installing the SDK
+$ ./%%%SDK%%%
+
+The shell script will ask you where to install the SDK.
+
+2. SDK content
+- sysroot/
+- i686-bistrosdk-linux -- host tools (e.g. toolchain) to be used on any x86 (or x86_64) linux host to cross-compile for i.MX6 chips
+- cortexa9-vfp-neon-bistro-linux-gnueabi -- target system-root-filesystem (target-sysroot) to be used by host tools to cross-compiling for i.MX6 chips
+
+A ready made Qt5.1 build which will use host tools and system-root-file-system to compile Qt applications for i.MX6 chips is integrated into the SDK.
+The qt host-tool can be found in sysroot/i686-bistrosdk-linux/usr/bin/qt5
+
+- various environment-setup files. Those are not needed if using Qt5.1 to cross-compile!
+If you want to use the Bistro SDK directly (without Qt) to cross-build you applications, you'll need those.
+e.g. using autotools should work like that:
+$ cd <your autotools based project>
+$ source <YOUR-SDK-LOCATION>/environment-setup-cortexa9-vfp-neon-bistro-linux-gnueabi
+$ ./autogen.sh --host=arm-bistro-linux-gnuabi [all your project specific options]
+
+
+3. How-to
+3.1 Images
+3.1.1 Requirements
+- SD-card reader
+- SD-card
+- minimal size: 2GB (1GB might work as well, but not tested)
+- speed: class10 is recommended, in general: the faster the better!
+system-performance depends heavily on sd-card speed!
+
+3.1.2 Flashing SD-card
+Plug in your SD-card into your host and identify your sd-card-device in /dev/ (e.g. $ dmesg ).
+Most likely it's something like /dev/sdX or /dev/mmcblk0 ; Do NOT use the partition -> sda1 or mmcblk0p1 is wrong!
+
+To flash your SD-card use the following commands:
+$ sudo dd if=<YOUR-SDK-LOCATION>/%%%IMAGE%%% /dev/<SD-CARD-DEVICE> && sync
+
+3.1.3 Booting the board
+Plug in the SD-card into the the SD-slot at the top of the (child) board.
+You should connect all necessary plugs (e.g. network, display, 'console')
+The configuration for the serial-console is:
+Bps/Par/Bits : 115200 8N1
+Hardware Flow Control : No
+Software Flow Control : No
+
+If you then plug in power you should see messages on serial console that u-boot is being loaded...
+
+
+3.2 Using Linux on target
+If you got the setup section 3.1.3 right, you should see 'something' on your screen
+
+You should, as soon as you get a login prompt within your serial console, find out which IP address your board has.
+login as 'root', password: 'root' (or nothing depending on image). Then:
+$ ifconfig
+
+Then you can login via ssh as well:
+$ ssh root@<ip address you just found out>
+
+3.3 Compiling and deploying Qt applications
+Using the shipped Qt is fairly simple and straight forward.
+All you need to do is to use the delivered qmake to create a Makefile for your Qt project, build it and then manually deploy it.
+As an example, how to compile 'qmlmark':
+$ cd qmlmark
+$ <YOUR-SDK-LOCATION>/sysroot/i686-bistrosdk-linux/usr/bin/qt5/qmake
+$ make
+$ scp -r qmlmark root@<ip address you found out in step 3.2>
+
+3.4 Using QtCreator for compiling and deploying Qt applications
+The SDK comes with a shell script which can setup QtCreator for you and add all the needed informations to compile Qt Applications for the Device.
+All you need is to call the qtCreatorConfig.sh and it will setup everything for you.
+$ <YOUR-SDK-LOCATION>/qtCreatorConfig.sh ~/qt-creator/bin Bistro-SDK
+$ restart qt-creator
+
+Aftwards a new Compiler/Debugger/Qt/Kit configuration is setup in QtCreator. By adding a new Generic Device and assigning the Device to the Kit configuration
+you can directly execute or debug your application on the Device.
+
+4. Known issues
+4.1 USB-mouse / mouse-cursor
+If you're using a usb-mouse (as alternative to a touch-screen) you want to see the mouse-courser as well:
+Just make sure that 'QT_QPA_EGLFS_HIDECURSOR=1' is not(!) set as environment variable.
+Per default this variable is not set when starting applications from serial-console or ssh-console.
+However it's currently set in /home/root/autostart.service ...just edit the file to adjust autostart behavior.
+
+Issue:
+There is a known problem with the input-driver and/or how the eglfs-plugin reads from the input device,
+resulting in a rather bad performance of mouse movement and also too high cpu load.
+This is worse the lower your cpu performance is (solo=worst, quad=least bad).
+
+
+4.2 Console blanking and blinking
+To disable blanking add: 'consoleblank=0' as kernel/boot parameters (without ')
+To disable blinking add: 'vt.global_cursor_default=0' as kernel/boot parameters (without ')
+
+Depending on your board/setup either u-boot environment and/or the bootloader script (6x_bootscript) defines those variables.
+Please look into your u-boot setup by interrupting boot-up via serial-console and then calling 'print' within u-boot shell.
+
+On the SabreAuto you can hijack the mmcroot variable:
+=> setenv mmcroot /dev/mmcblk0p2 rootwait rw vt.global_cursor_default=0 consoleblank=0
+=> boot
+One u-boot-command-example taken from the wandboard-solo:
+=> setenv mmcargs setenv bootargs console=\${console},\${baudrate} root=\${mmcroot} consoleblank=0 vt.global_cursor_default=0
+=> boot
+
+If you're using any other board it's unlikely to work. Even on another revision of the board and/or the SDK it might not work anymore.
+After you've confirmed it's working you can do the same thing again and do 'saveenv' between 'setenv ...' and 'boot' to make the change permanent
+

@@ -1,0 +1,9 @@
+[Unit]
+Description=Autostarting Cinematicexperience 
+
+[Service]
+
+ExecStart=/usr/bin/Qt5_CinematicExperience
+WorkingDirectory=/home/root/
+
+Environment=QT_QPA_EGLFS_HIDECURSOR=1 QT_QPA_PLATFORM=eglfs

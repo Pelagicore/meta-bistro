@@ -1,0 +1,11 @@
+[Unit]
+Description=D-Bus Session Message Bus
+
+[Service]
+User=%i
+ExecStartPre=/bin/mkdir -p /run/user/%i/dbus/
+ExecStart=/usr/bin/dbus-daemon --session --nofork --address=unix:path=/run/user/%i/dbus/user_bus_socket
+ExecReload=/usr/bin/dbus-send --print-reply --session --type=method_call --dest=org.freedesktop.DBus / org.freedesktop.DBus.ReloadConfig
+
+[Install]
+WantedBy=multi-user.target

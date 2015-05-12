@@ -1,0 +1,42 @@
+diff -uNr libmediaart-0.6.0.orig/configure.ac libmediaart-0.6.0/configure.ac
+--- libmediaart-0.6.0.orig/configure.ac	2014-09-05 14:05:01.734476286 +0200
++++ libmediaart-0.6.0/configure.ac	2014-09-05 14:05:11.942476358 +0200
+@@ -179,7 +179,7 @@
+ # Build introspectable bindings
+ ####################################################################
+ 
+-GOBJECT_INTROSPECTION_CHECK([1.30.0])
++# GOBJECT_INTROSPECTION_CHECK([1.30.0])
+ 
+ m4_ifdef([VAPIGEN_CHECK], [
+ # Vala bindings
+diff -uNr libmediaart-0.6.0.orig/libmediaart/Makefile.am libmediaart-0.6.0/libmediaart/Makefile.am
+--- libmediaart-0.6.0.orig/libmediaart/Makefile.am	2014-09-05 14:05:01.738476287 +0200
++++ libmediaart-0.6.0/libmediaart/Makefile.am	2014-09-05 14:05:25.390476453 +0200
+@@ -74,26 +74,6 @@
+ INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --symbol-prefix=media_art
+ INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
+ 
+-if HAVE_INTROSPECTION
+-introspection_sources = $(libmediaart_sources) extractdummy.c
+-
+-MediaArt-@LIBMEDIAART_API_VERSION@.gir: libmediaart-@LIBMEDIAART_API_VERSION@.la
+-MediaArt_@LIBMEDIAART_API_VERSION_U@_gir_INCLUDES = GObject-2.0 Gio-2.0
+-MediaArt_@LIBMEDIAART_API_VERSION_U@_gir_CFLAGS = $(INCLUDES) -DLIBMEDIAART_COMPILATION
+-MediaArt_@LIBMEDIAART_API_VERSION_U@_gir_LIBS = libmediaart-@LIBMEDIAART_API_VERSION@.la
+-MediaArt_@LIBMEDIAART_API_VERSION_U@_gir_SCANNERFLAGS = --c-include=libmediaart/mediaart.h
+-MediaArt_@LIBMEDIAART_API_VERSION_U@_gir_FILES = $(introspection_sources)
+-INTROSPECTION_GIRS += MediaArt-@LIBMEDIAART_API_VERSION@.gir
+-
+-girdir = $(datadir)/gir-1.0
+-gir_DATA = $(INTROSPECTION_GIRS)
+-
+-typelibdir = $(libdir)/girepository-1.0
+-typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+-
+-BUILT_SOURCES += $(gir_DATA) $(typelib_DATA)
+-endif
+-
+ if ENABLE_VAPIGEN
+ -include $(VAPIGEN_MAKEFILE)
+ 

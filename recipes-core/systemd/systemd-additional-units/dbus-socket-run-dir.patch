@@ -1,0 +1,10 @@
+diff --git a/units/user/dbus.socket.in b/units/user/dbus.socket.in
+index d165a38..9da9fbf 100644
+--- a/units/user/dbus.socket.in
++++ b/units/user/dbus.socket.in
+@@ -2,4 +2,4 @@
+ Description=D-Bus System Message Bus Socket
+ 
+ [Socket]
+-ListenStream=%t/dbus/user_bus_socket
++ListenStream=%t/user/%U/dbus/user_bus_socket

@@ -1,0 +1,5 @@
+[Unit]
+Description=Lazy Target
+Requires=unfocussed.target multi-user.target
+After=unfocussed.target
+AllowIsolate=yes
