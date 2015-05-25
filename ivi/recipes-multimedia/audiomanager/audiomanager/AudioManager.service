@@ -1,0 +1,13 @@
+[Unit]
+Description=AudioManager
+Requires=dbus-session@root.service
+After=dbus-session@root.service
+
+[Service]
+Type=simple
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/root/dbus/user_bus_socket
+RemainAfterExit=true
+ExecStart=/usr/bin/AudioManager
+
+[Install]
+WantedBy=multi-user.target
