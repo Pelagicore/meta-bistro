@@ -4,3 +4,5 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 do_install_append() {
 	rm -rf ${D}${systemd_unitdir}/scripts
 }
+
+RDEPENDS_${PN} += "dbus-session"
