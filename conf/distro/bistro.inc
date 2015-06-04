@@ -84,30 +84,38 @@ CONNECTIVITY_CHECK_URIS ?= " \
              http://bugzilla.yoctoproject.org/report.cgi"
 
 SANITY_TESTED_DISTROS ?= " \
-            Yocto (Built by Poky 8.0) 1.2 \n \
-            Yocto (Built by Poky 7.0) 1.2 \n \
-            Poky 7.0 (Yocto Project 1.2 Reference Distro) 1.2 \n \
-            Poky 8.0 (Yocto Project 1.3 Reference Distro) 1.3 \n \
-            Ubuntu 10.04.4 LTS \n \
-            Ubuntu 11.10 \n \
-            Ubuntu 12.04 LTS \n \
-            Ubuntu 12.04.2 LTS \n \
-            Ubuntu 12.04.1 LTS \n \
-            Ubuntu 12.10 \n \
-            Ubuntu-14.04 \n \
-            Fedora release 16 (Verne) \n \
-            Fedora release 17 (Beefy Miracle) \n \
-            Fedora release 18 (Spherical Cow) \n \
+            CentOS-6.* \n \
+            CentOS-7.* \n \
             CentOS release 5.6 (Final) \n \
             CentOS release 5.7 (Final) \n \
             CentOS release 5.8 (Final) \n \
             CentOS release 6.3 (Final) \n \
+            Debian-7.* \n \
+            Debian-8.* \n \
             Debian GNU/Linux 6.0.6 (squeeze) \n \
             Debian GNU/Linux 7.0 (wheezy) \n \
             Debian-unstable \n \
-            openSUSE 11.4 \n \
-            openSUSE 12.1 \n \
+            Fedora-21 \n \
+            Fedora release 16 (Verne) \n \
+            Fedora release 17 (Beefy Miracle) \n \
+            Fedora release 18 (Spherical Cow) \n \
             openSUSE 12.2 \n \
+            openSUSE-13.2 \n \
+            poky-1.7 \n \
+            poky-1.8 \n \
+            Poky 7.0 (Yocto Project 1.2 Reference Distro) 1.2 \n \
+            Poky 8.0 (Yocto Project 1.3 Reference Distro) 1.3 \n \
+            Ubuntu 10.04.4 LTS \n \
+            Ubuntu 11.10 \n \
+            Ubuntu 12.04.1 LTS \n \
+            Ubuntu 12.04.2 LTS \n \
+            Ubuntu 12.04 LTS \n \
+            Ubuntu 12.10 \n \
+            Ubuntu-14.04 \n \
+            Ubuntu-14.10 \n \
+            Ubuntu-15.04 \n \
+            Yocto (Built by Poky 7.0) 1.2 \n \
+            Yocto (Built by Poky 8.0) 1.2 \n \
 	    "
 
 # Default hash policy for distro
