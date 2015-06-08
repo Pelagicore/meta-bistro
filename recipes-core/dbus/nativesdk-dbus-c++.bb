@@ -15,7 +15,7 @@ PE = "1"
 PV = "0.6.0-pre1+gitr${SRCPV}"
 
 SRC_URI = " \
-	git://gitorious.org/dbus-cplusplus/mainline.git;protocol=git \
+	git://gitorious.org/dbus-cplusplus/mainline.git;protocol=https \
 	file://dbus-c++.patch \
 	"
 
