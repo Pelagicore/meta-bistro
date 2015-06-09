@@ -1,10 +1,14 @@
-Layer containing Bistro distro
+A layer to provide IVI related functionality in an OpenEmbedded Linux system.
+
+## DEPENDENCIES ##
 
 This layer currently depends on: 
 * poky (and meta-oe)
 * meta-qt5
 * meta-openembedded/meta-ruby
 * meta-openembedded/meta-multimedia
+
+## LICENSE AND COPYRIGHT ##
 
 Copyright (C) 2015 Pelagicore AB
 
