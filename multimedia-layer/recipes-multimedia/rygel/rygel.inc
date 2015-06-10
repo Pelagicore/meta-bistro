@@ -16,7 +16,7 @@ PACKAGES_DYNAMIC = "${PN}-*"
 
 HOMEPAGE = "http://live.gnome.org/Rygel"
 
-EXTRA_OECONF = "--disable-tracker-plugin --with-media-engine=simple"
+EXTRA_OECONF = "--disable-tracker-plugin --with-media-engine=simple --without-ui"
 
 FILES_${PN} += " \
 	${datadir}/dbus-1/ \
