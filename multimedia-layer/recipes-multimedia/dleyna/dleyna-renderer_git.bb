@@ -5,4 +5,4 @@
 DESCRIPTION = "dLeyna Renderer"
 DEPENDS = "dleyna-core"
 require dleyna-git.inc
-SRCREV = "3c4acf93f2639d857d4524f4d6304b3de1e03f24"
+SRCREV = "b7514080bbcd88724c8609a56c46ed97c1ae66e4"
