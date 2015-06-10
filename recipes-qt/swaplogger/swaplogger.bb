@@ -7,7 +7,7 @@ HOMEPAGE = "https://github.com/mer-tools/swaplogger"
 DEPENDS = "virtual/egl"
 PR = "r0"
 
-inherit autotools
+inherit autotools-brokensep
 
 LICENSE = "nokia"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d25f5ab7fee8539cd6db2dcf074cece6"
