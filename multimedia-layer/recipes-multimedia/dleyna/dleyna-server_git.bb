@@ -4,7 +4,7 @@
 #
 DESCRIPTION = "dLeyna Server"
 DEPENDS = "dleyna-core"
-EXTRA_OECONF += " --enable-never-quit "
+EXTRA_OECONF += " --enable-never-quit --enable-debug"
 require dleyna-git.inc
 
 inherit systemd
