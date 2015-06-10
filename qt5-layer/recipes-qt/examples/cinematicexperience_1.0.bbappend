@@ -10,7 +10,7 @@ SYSTEMD_SERVICE_${PN}-systemd = "cinematicexperience.service"
 
 PACKAGES += "${PN}-systemd"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " \
     file://cinematicexperience.service \
