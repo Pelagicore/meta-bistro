@@ -4,4 +4,4 @@
 #
 DESCRIPTION = "dLeyna Core"
 require dleyna-git.inc
-SRCREV = "20c77a2554d6f170e541ac490e343c532bdfc53e"
+SRCREV = "d161d1616d4cb32a8c1e23a0587ee37e3ab0deb0"
