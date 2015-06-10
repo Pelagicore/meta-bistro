@@ -8,11 +8,8 @@ EXTRA_OECONF += " --enable-never-quit "
 require dleyna-git.inc
 
 inherit systemd
-SRCREV = "fb4d75188711b02822c3a7dba0ed6d129f608542"
-SRC_URI += " \ 
-	   file://0001-Add-artist-and-AlbumArtURL-to-MediaContainer2.patch \
-	   file://dleyna.service \
-          "
+SRCREV = "b5394e2be1cfaefe1f442a7cacc1c3a1f0c1c1ff"
+SRC_URI += "file://dleyna.service"
 
 SYSTEMD_SERVICE_${PN} = "dleyna.service"
 SYSTEMD_AUTO_ENABLE = "enable"
