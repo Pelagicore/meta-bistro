@@ -12,7 +12,7 @@ LOCALCONF_VERSION = "1"
 LAYER_CONF_VERSION ?= "6"
 
 # Following line is a copy from meta/conf/distro/include/default-distrovars.inc, but without 'x11'  (note: removing the 'x11' from the variable doesn't work due resulting to eglibc build errors)
-DISTRO_FEATURES = "alsa argp bluetooth ext2 irda largefile pcmcia usbgadget usbhost wifi xattr nfs pci 3g ${DISTRO_FEATURES_LIBC}"
+DISTRO_FEATURES = "alsa argp bluetooth bluez5 ext2 irda largefile pcmcia usbgadget usbhost wifi xattr nfs pci 3g ${DISTRO_FEATURES_LIBC}"
 
 VIRTUAL-RUNTIME_init_manager = "systemd"
 VIRTUAL-RUNTIME_initscripts = " "
