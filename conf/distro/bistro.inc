@@ -17,6 +17,7 @@ DISTRO_FEATURES = "alsa argp bluetooth ext2 irda largefile pcmcia usbgadget usbh
 VIRTUAL-RUNTIME_init_manager = "systemd"
 VIRTUAL-RUNTIME_initscripts = " "
 DISTRO_FEATURES =+ " largefile opengl multiarch systemd ptest"
+DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
 
 PREFERRED_VERSION_linux-yocto ?= "3.4%"
 PREFERRED_VERSION_linux-yocto_qemux86 ?= "3.4%"
