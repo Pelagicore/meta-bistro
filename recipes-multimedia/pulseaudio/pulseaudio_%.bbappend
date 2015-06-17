@@ -7,9 +7,10 @@ EXTRA_OECONF += " --disable-gconf "
 
 RDEPENDS_pulseaudio-server += " \
     pulseaudio-misc \
-    pulseaudio-module-bluetooth-discover \
-    pulseaudio-module-bluetooth-policy \
 "
+
+#    pulseaudio-module-bluetooth-discover
+#    pulseaudio-module-bluetooth-policy
 
 SRC_URI += "file://pulseaudio-mutex-assert-fix.patch"
 
