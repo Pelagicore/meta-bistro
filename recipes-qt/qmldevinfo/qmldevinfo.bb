@@ -13,6 +13,7 @@ SRC_URI = "git://git@github.com/Pelagicore/qmldevinfo.git;branch=master;protocol
 SRCREV = "50a305aa42a8e542cac66b843fdbfaff08d58bf0"
 
 LICENSE = "MPL-2.0"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=9741c346eef56131163e13b9db1241b3"
 
 PV = "1.0+git${SRCREV}"
 PR = "r1"
