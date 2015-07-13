@@ -9,8 +9,8 @@ OE_QMAKE_PATH_HEADERS = "${OE_QMAKE_PATH_QT_HEADERS}"
 
 DEPENDS += "qtbase qtdeclarative qtquick1"
 
-SRC_URI = "git://git@git.pelagicore.net/development-tools/qmldevinfo.git;branch=master;protocol=ssh"
-SRCREV = "46682c155aae3041fadd85e5d017bbaa4b2f9373"
+SRC_URI = "git://git@github.com/Pelagicore/qmldevinfo.git;branch=master;protocol=ssh"
+SRCREV = "50a305aa42a8e542cac66b843fdbfaff08d58bf0"
 
 LICENSE = "MPL-2.0"
 
