@@ -17,8 +17,4 @@ inherit autotools pkgconfig
 
 require recipes-connectivity/gupnp/no-vala.inc
 
-# The GStreamer metadata backend requires GStreamer 1.0, so skip this until we
-# have that packaged.
-EXTRA_OECONF = "--disable-gstreamer-metadata-backend"
-
 FILES_${PN} += "${datadir}/gupnp-dlna-2.0/dlna-profiles"
