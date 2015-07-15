@@ -7,7 +7,7 @@ LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
                     file://libgupnp-dlna/gupnp-dlna-profile.h;beginline=1;endline=22;md5=1b85459f65cb1e73a885ca137aab6274"
 
-DEPENDS = "libxml2 glib-2.0"
+DEPENDS = "libxml2 glib-2.0 gstreamer1.0 gstreamer1.0-plugins-base"
 
 SRC_URI = "http://download.gnome.org/sources/${BPN}/0.9/${BPN}-${PV}.tar.xz"
 SRC_URI[md5sum] = "b0c9e5e6edc5ca6fe854bc53560431bf"
