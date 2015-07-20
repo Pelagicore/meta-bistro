@@ -7,7 +7,7 @@ inherit qmake5
 PARALLEL_MAKE = "-j1"
 OE_QMAKE_PATH_HEADERS = "${OE_QMAKE_PATH_QT_HEADERS}"
 
-DEPENDS += "qtbase qtdeclarative qtquick1"
+DEPENDS += "qtbase qtdeclarative"
 
 SRC_URI = "git://git@github.com/Pelagicore/qmldevinfo.git;branch=master;protocol=ssh"
 SRCREV = "50a305aa42a8e542cac66b843fdbfaff08d58bf0"
