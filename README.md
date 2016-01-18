@@ -1,8 +1,8 @@
-# meta-bistro # 
+# meta-bistro  
 
 A layer to provide IVI related functionality in an OpenEmbedded Linux system.
 
-## Dependencies ##
+## Dependencies
 
 This layer currently depends on: 
 * poky (and meta-oe)
@@ -13,10 +13,11 @@ These are optional dependencies which we have additions for through the layers
 functions described below:
 * meta-qt5
 * meta-ivi
+* meta-openembedded/meta-ruby
 * meta-openembedded/meta-multimedia
 * meta-openembedded/meta-ruby (for qtwebkit)
 
-## Layers ## 
+## Layers
 
 Depending on included layers used together with meta-bistro additional 
 functionality is added from the layers/*/ directories. This is done by adding 
@@ -29,7 +30,7 @@ layer, and hence the names of the directories can not be changed by us directly.
 The general idea is that These layer additions should only be added to
 meta-bistro if those other layers are available.
 
-## License and Copyright ##
+## License and Copyright
 
 Copyright (C) 2015 Pelagicore AB
 
