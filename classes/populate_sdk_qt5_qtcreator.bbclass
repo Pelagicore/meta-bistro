@@ -6,7 +6,7 @@ QTCREATORSCRIPT = "qtCreatorConfig.sh"
 QTCREATORSCRIPTPATH = "${SDK_OUTPUT}/${SDKPATH}/${QTCREATORSCRIPT}"
 REAL_MULTIMACH_TARGET_SYS = "${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
-toolchain_create_sdk_env_script_append () {
+create_sdk_files_prepend () {
 	cat << "EOF" > ${QTCREATORSCRIPTPATH}
 #!/bin/bash
 

@@ -1,22 +1,18 @@
-#
-#   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
-#
 LICENSE = "GPLv2"
 
 inherit gnome vala cmake
 
-SRC_URI = " \
-	git://github.com/Pelagicore/Media-Manager-Rygel-LMS-Plugin.git;protocol=https;branch=rygel24 \
-	"
+SRC_URI = "git://github.com/Pelagicore/Media-Manager-Rygel-LMS-Plugin.git;protocol=https;branch=rygel24 \
+           file://fix-typecast.patch \
+           "
 
-SRCREV = "fd0213bf3f55e4b3fef35024a511325b429a8afd"
+SRCREV = "5f0735d585155658fdf849dd893e0ec21bf890b5"
 PV = "0.23.3+mm-git${SRCPV}"
 S = "${WORKDIR}/git/"
 
 DESCRIPTION = "LMS plugin for Rygel"
 SECTION = "network/multimedia"
-DEPENDS = "rygel lms"
+DEPENDS = "rygel lightmediascanner"
 
 FILES_${PN} += "${libdir}/rygel-2.4/plugins"
 FILES_${PN}-dbg += "${libdir}/rygel-2.4/plugins/.debug"

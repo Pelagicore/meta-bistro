@@ -17,4 +17,4 @@ FILES_${PN}-dbg += "${libdir}/${PN}/.debug"
 FILES_${PN} += "${libdir}/dleyna-1.0/connectors"
 FILES_${PN}-dbg = "${libdir}/dleyna-1.0/connectors/.debug"
 
-inherit autotools gettext
+inherit autotools gettext pkgconfig

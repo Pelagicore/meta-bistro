@@ -21,7 +21,9 @@ SRCREV = "b06b5476dae2ee56688e3d5f7e0bf4987848d476"
 
 S = "${WORKDIR}/git/"
 
-CFLAGS += "-DLINUX=1 -DEGL_API_FB=1 -shared -fPIC"
+CFLAGS += "-DLINUX=1 -DEGL_API_FB=1 -shared -fPIC \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', '', '-DMESA_EGL_NO_X11_HEADERS', d)} \
+    "
 
 do_install() {
 	mkdir -p ${D}/${libdir}
