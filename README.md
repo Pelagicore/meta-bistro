@@ -2,13 +2,19 @@
 
 A layer to provide IVI related functionality in an OpenEmbedded Linux system.
 
-## DEPENDENCIES ##
+## Dependencies ##
 
 This layer currently depends on: 
 * poky (and meta-oe)
+
+### Optional dependencies
+
+These are optional dependencies which we have additions for through the layers 
+functions described below:
 * meta-qt5
-* meta-openembedded/meta-ruby
+* meta-ivi
 * meta-openembedded/meta-multimedia
+* meta-openembedded/meta-ruby (for qtwebkit)
 
 ## Layers ## 
 
@@ -23,7 +29,7 @@ layer, and hence the names of the directories can not be changed by us directly.
 The general idea is that These layer additions should only be added to
 meta-bistro if those other layers are available.
 
-## LICENSE AND COPYRIGHT ##
+## License and Copyright ##
 
 Copyright (C) 2015 Pelagicore AB
 
