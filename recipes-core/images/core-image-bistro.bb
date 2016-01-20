@@ -7,7 +7,7 @@ DESCRIPTION = "Image for creating a small bootable Bistro-based image"
 inherit core-image
 
 # Network management
-IMAGE_INSTALL += "connman ipforward"
+IMAGE_INSTALL += "connman"
 
 # helpers (dev)
 IMAGE_FEATURES += "package-management"
