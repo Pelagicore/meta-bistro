@@ -7,9 +7,9 @@ EXTRA_OECONF += " --disable-gconf "
 
 RDEPENDS_pulseaudio-server += " \
     pulseaudio-misc \
-    pulseaudio-module-bluetooth-discover \
-    pulseaudio-module-bluetooth-policy \
 "
+
+PACKAGECONFIG += "bluez5 bluetooth"
 
 SRC_URI += "file://pulseaudio-mutex-assert-fix.patch"
 

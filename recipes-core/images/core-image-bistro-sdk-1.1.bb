@@ -5,9 +5,10 @@
 DESCRIPTION = "Image for creating a small bootable Bistro-based image"
 
 inherit core-image
+inherit populate_sdk_qt5_qtcreator
 
 # Network management
-IMAGE_INSTALL += "connman"
+IMAGE_INSTALL += "connman ipforward"
 
 # helpers (dev)
 IMAGE_FEATURES += "package-management"

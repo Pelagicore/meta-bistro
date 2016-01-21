@@ -1,13 +1,13 @@
 LICENSE = "LGPLv2+"
 
-inherit gnome vala systemd
+inherit gnome vala systemd pkgconfig
 
 SRC_URI = " \
 	${GNOME_MIRROR}/${BPN}/${@gnome_verdir("${PV}")}/${BPN}-${PV}.tar.xz;name=archive \
 	file://rygel.service \
 	"
 
-DESCRIPTION = "Collection of DLNA[1] (UPnP[2] AV) devices, implemented through a plug-in mechanism."
+DESCRIPTION = "Collection of DLNA (UPnP AV) devices, implemented through a plug-in mechanism."
 SECTION = "network/multimedia"
 DEPENDS = "glib-2.0 gupnp gupnp-av gupnp-dlna gstreamer gst-plugins-base sqlite3 libsoup-2.4 libgee shared-mime-info"
 
