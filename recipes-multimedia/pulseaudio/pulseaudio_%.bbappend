@@ -9,8 +9,6 @@ RDEPENDS_pulseaudio-server += " \
     pulseaudio-misc \
 "
 
-PACKAGECONFIG += "bluez5 bluetooth"
-
 SRC_URI += "file://pulseaudio-mutex-assert-fix.patch"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
