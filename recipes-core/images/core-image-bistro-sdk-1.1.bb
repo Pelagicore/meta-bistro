@@ -8,7 +8,7 @@ inherit core-image
 inherit populate_sdk_qt5_qtcreator
 
 # Network management
-IMAGE_INSTALL += "connman ipforward"
+IMAGE_INSTALL += "connman"
 
 # helpers (dev)
 IMAGE_FEATURES += "package-management"
