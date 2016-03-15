@@ -14,7 +14,7 @@ OE_QMAKE_PATH_HEADERS = "${OE_QMAKE_PATH_QT_HEADERS}"
 DEPENDS += "qtbase qtdeclarative"
 
 SRC_URI = "git://github.com/Pelagicore/colortest;branch=master;protocol=https"
-SRCREV = "d3cef6a11dd473746ece789d39ed1b6800293d45"
+SRCREV = "389f69891bc17581edb39f3961fe6eb9fa6829ef"
 
 LICENSE = "MPL-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=9741c346eef56131163e13b9db1241b3"
