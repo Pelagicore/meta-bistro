@@ -15,7 +15,7 @@ GIT_REPO = "git://github.com/Pelagicore/common-api-tools.git;protocol=https"
 S = "${WORKDIR}/git"
 
 SRC_URI = "${GIT_REPO};branch=master"
-SRCREV = "a7a514e347c3e3a37888016efbd7090a36c95916"
+SRCREV = "81fe6698a95ba048ed2dbf1b557c884a97f939d6"
 PV = "0.1+git${SRCREV}"
 
 FILES_${PN} += "${datadir}/*"

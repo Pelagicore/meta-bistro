@@ -17,7 +17,7 @@ S = "${WORKDIR}/git"
 #EXTRA_OECMAKE += " -DMAVEN_OPTIONS=${MAVEN_OPTIONS}"
 
 SRC_URI = "${GIT_REPO};branch=master"
-SRCREV = "432972cd710368e69f0b96954bc8388a6033d984"
+SRCREV = "fefb5e2f7e87ce01a5c53858fc0ba4f052cc4035"
 PV = "3.1.5.${SRCREV}"
 
 FILES_${PN} += "${datadir}/* \
