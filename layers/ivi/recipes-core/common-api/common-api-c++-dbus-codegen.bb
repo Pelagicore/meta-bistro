@@ -7,7 +7,7 @@ LICENSE = "MPL-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=815ca599c9df247a0c7f619bab123dad"
 PR = "r0"
 
-DEPENDS = "common-api-cmdline-codegen common-api-c++-codegen"
+DEPENDS = "common-api-c++-codegen common-api-dbus-integration"
 
 inherit cmake maven-properties
 
