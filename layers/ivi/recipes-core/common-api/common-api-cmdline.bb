@@ -3,8 +3,6 @@
 #
 require ${PN}-common.inc
 
-DEPENDS += "common-api-dbus-integration"
-
 inherit cmake
 
 S = "${WORKDIR}/git/cmake"
