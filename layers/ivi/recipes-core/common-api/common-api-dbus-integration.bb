@@ -9,7 +9,7 @@ inherit cmake
 
 SRC_URI = "git://github.com/Pelagicore/common-api-dbus-integration.git;protocol=https;branch=master"
 
-SRCREV = "58400e553f81e5397015e142cfe5854a965781a4"
+SRCREV = "e8723f7c0da6598acd56154551f9f91ac7484b1c"
 
 S = "${WORKDIR}/git"
 
