@@ -11,6 +11,6 @@ PR = "r0"
 GIT_REPO = "git://github.com/Pelagicore/common-api-cmdline.git;protocol=https"
 
 SRC_URI = "${GIT_REPO};branch=master"
-SRCREV = "8820c1b6d21d59cac85a6766380c54dff4e5adcc"
+SRCREV = "1fc82a742244fba83c0ef1695d5d45a0af17b3e5"
 PV = "0.1+git${SRCREV}"
 
