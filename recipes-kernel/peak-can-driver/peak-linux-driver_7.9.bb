@@ -1,8 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = "PEAK CAN Bus Driver" 
+HOMEPAGE = "http://www.peak-system.com/fileadmin/media/linux/index.htm"
 LICENSE = "GPLv2" 
 LIC_FILES_CHKSUM = "file://Documentation/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f" 
 PR = "r0" 
