@@ -1,7 +1,6 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
-#
+
 DESCRIPTION = "libspotify"
 HOMEPAGE = "http://developer.spotify.com"
 LICENSE = "commercial"
