@@ -30,9 +30,9 @@ done
 # Remove the switches we parsed above.
 shift `expr $OPTIND - 1`
 
-# We want at least one non-option argument. 
+# We want at least one non-option argument.
 # Remove this block if you don't need it.
-if [ $# -eq 0 ]; then
+if [[ $# -eq 0 ]]; then
     echo -e $USAGE >&2
     exit 1
 fi
@@ -40,48 +40,83 @@ fi
 qtCreatorBinPath=$1
 name=$2
 
-toolchainId="ProjectExplorer.ToolChain.Gcc:$name";
-qtId=$name"_qt";
-kitId=$name"_kit";
+toolchainId="ProjectExplorer.ToolChain.Gcc:$name"
+qtId=$name"_qt"
+kitId=$name"_kit"
+dbgId=$name"_dbg"
 
 CUR_DIR=`dirname $0`
 source $CUR_DIR/environment-setup-${REAL_MULTIMACH_TARGET_SYS}
 
-abi="${TARGET_ARCH}-linux-generic-elf-${SITEINFO_BITS}bit"
+# The QtCreator does not handle ABI starting with 'x86_64', it expects 'x86'...
+target_arch="${TARGET_ARCH}"
+if [[ "$target_arch" == "x86_64" ]] ; then
+    target_arch="x86"
+fi
+abi=$target_arch"-linux-generic-elf-${SITEINFO_BITS}bit"
 compiler=`which $CXX`
-qmake=`which qmake-sdk`
+qmake=`which qmake`
 gdb=`which $GDB`
 sysroot=$SDKTARGETSYSROOT
 
-if [ $removeMode -eq 0 ]; then
+if [[ $removeMode -eq 0 ]]; then
 
     $qtCreatorBinPath/sdktool addTC --id "$toolchainId" --name "$name" --abi $abi --path $compiler > /dev/null
-    if [ $? -ne 0 ]; then
-        echo adding Toolchain failed
+    if [[ $? -ne 0 ]]; then
+        echo "Adding Toolchain failed"
         exit 1
     fi
     $qtCreatorBinPath/sdktool addQt --id "$qtId" --name "$name" --type "RemoteLinux.EmbeddedLinuxQt" --qmake $qmake > /dev/null
-    if [ $? -ne 0 ]; then
-        echo adding Qt failed
+    if [[ $? -ne 0 ]]; then
+        echo "Adding Qt failed"
         $qtCreatorBinPath/sdktool rmTC --id "$toolchainId" > /dev/null
         exit 1
     fi
-    $qtCreatorBinPath/sdktool addKit --id "$kitId" --name "$name" --debuggerengine 1 --debugger $gdb --devicetype GenericLinuxOsType --sysroot $sysroot --toolchain "$toolchainId" --qt "$qtId" --mkspec "${OE_QMAKE_PLATFORM}" > /dev/null
-    if [ $? -ne 0 ]; then
-        echo adding Kit failed
+    $qtCreatorBinPath/sdktool addDebugger --id "$dbgId" --name "$name" --engine 1 --binary "$gdb"  > /dev/null
+    if [[ $? -ne 0 ]]; then
+        echo "Adding Debugger failed"
         $qtCreatorBinPath/sdktool rmTC --id "$toolchainId" > /dev/null
         $qtCreatorBinPath/sdktool rmQt --id "$qtId" > /dev/null
         exit 1
     fi
 
-    echo "Added Kit successfully";
+    $qtCreatorBinPath/sdktool addKit --id "$kitId" --name "$name" --debuggerid "$dbgId" --devicetype GenericLinuxOsType --sysroot $sysroot --toolchain "$toolchainId" --qt "$qtId" --mkspec "${OE_QMAKE_PLATFORM}" > /dev/null
+    if [[ $? -ne 0 ]]; then
+        echo "Adding Kit failed"
+        $qtCreatorBinPath/sdktool rmTC --id "$toolchainId" > /dev/null
+        $qtCreatorBinPath/sdktool rmQt --id "$qtId" > /dev/null
+        $qtCreatorBinPath/sdktool rmDebugger --id "$dbgId" > /dev/null
+        exit 1
+    fi
+
+    echo "Added Kit successfully"
 
 else
-        $qtCreatorBinPath/sdktool rmTC --id "$toolchainId" > /dev/null
-        $qtCreatorBinPath/sdktool rmQt --id "$qtId" > /dev/null
+        success=1
         $qtCreatorBinPath/sdktool rmKit --id "$kitId" > /dev/null
+        if [[ $? -ne 0 ]]; then
+            echo "Removing Kit failed"
+            success=0
+        fi
+        $qtCreatorBinPath/sdktool rmTC --id "$toolchainId" > /dev/null
+        if [[ $? -ne 0 ]]; then
+            echo "Removing Toolchain failed"
+            success=0
+        fi
+        $qtCreatorBinPath/sdktool rmQt --id "$qtId" > /dev/null
+        if [[ $? -ne 0 ]]; then
+            echo "Removing Qt failed"
+            success=0
+        fi
+        $qtCreatorBinPath/sdktool rmDebugger --id "$dbgId" > /dev/null
+        if [[ $? -ne 0 ]]; then
+            echo "Removing Debugger failed"
+            success=0
+        fi
 
-        echo "Removed Kit successfully";
+        if [[ $success -ne 0 ]]; then
+            echo "Removed Kit successfully"
+        fi
 fi
 EOF
 
