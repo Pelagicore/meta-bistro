@@ -1,3 +1,5 @@
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+
 # meta-bistro
 
 A layer to provide IVI related functionality in an OpenEmbedded Linux system.
