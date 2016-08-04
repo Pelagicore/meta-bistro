@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = "Image for creating a small bootable Bistro-based image, the SDK and also make the sysroot ready for building Qt against it (with the SDK, not with bitbake). Also including wayland and meta-ivi packages"
 

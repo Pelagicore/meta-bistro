@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = "Vala vapi files for gssdp, gupnp and gupnp-av"
 SECTION = "multimedia"

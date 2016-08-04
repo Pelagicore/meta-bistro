@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = "open-avb"
 HOMEPAGE = "https://github.com/AVnu/Open-AVB"

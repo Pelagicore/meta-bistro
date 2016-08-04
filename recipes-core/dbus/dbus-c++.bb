@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = "C++ bindings for dbus"
 LICENSE = "LGPLv2.1+"

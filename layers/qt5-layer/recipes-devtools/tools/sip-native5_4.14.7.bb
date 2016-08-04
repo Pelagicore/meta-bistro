@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = "SIP is a C++/Python Wrapper Generator"
 AUTHOR = "Phil Thompson"

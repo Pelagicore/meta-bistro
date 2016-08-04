@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = " Python module to handle audio metadata"
 HOMEPAGE = "http://code.google.com/p/quodlibet/wiki/Development/Mutagen"

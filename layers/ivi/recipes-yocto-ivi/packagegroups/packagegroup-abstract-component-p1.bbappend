@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 python () {
     rdep = bb.data.getVar('RDEPENDS_packagegroup-abstract-component-p1', d, 1)

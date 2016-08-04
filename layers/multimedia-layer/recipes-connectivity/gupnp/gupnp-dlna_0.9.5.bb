@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 SUMMARY = "Helpers for AV applications using DLNA"
 LICENSE = "LGPLv2"

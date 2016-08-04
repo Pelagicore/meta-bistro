@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = "A library for network address representation and manipulation"
 HOMEPAGE = "https://github.com/drkjam/netaddr"

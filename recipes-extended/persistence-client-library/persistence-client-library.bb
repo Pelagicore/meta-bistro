@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = "GENIVI Persistence Client Library"
 LICENSE = "MPLv2"
