@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 inherit update-alternatives
 

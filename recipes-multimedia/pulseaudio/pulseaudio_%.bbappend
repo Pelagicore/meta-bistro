@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DEPENDS := "${@oe_filter_out('gconf', '${DEPENDS}', d)}"
 EXTRA_OECONF += " --disable-gconf "

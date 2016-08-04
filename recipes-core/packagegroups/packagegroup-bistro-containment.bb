@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   All rights reserved.
 #
 DESCRIPTION = "Packagegroups which adds some tools to Bistro for application containment."
 LICENSE = "MIT"
