@@ -16,7 +16,6 @@ PACKAGECONFIG += " \
     openssl \
     icu \
     gles2 \
-    gstreamer \
     alsa \
     accessibility \
     ${PACKAGECONFIG_GL} \
