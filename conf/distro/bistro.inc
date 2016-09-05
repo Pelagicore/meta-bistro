@@ -54,7 +54,7 @@ DISTRO_EXTRA_RDEPENDS_append_qemux86-64 = " ${POKYQEMUDEPS}"
 
 TCLIBCAPPEND = ""
 
-QEMU_TARGETS ?= "arm i386 mips mipsel ppc x86_64"
+QEMU_TARGETS ?= "arm i386 mips mipsel ppc x86_64 aarch64"
 # Other QEMU_TARGETS "mips64 mips64el sh4"
 
 PREMIRRORS ?= "\
