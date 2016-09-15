@@ -5,7 +5,7 @@ DESCRIPTION = "Additional systemd units for user-sessions"
 HOMEPAGE = "https://github.com/sofar/user-session-units"
 LICENSE = "LGPLv2"
 
-DEPENDS = "systemd"
+DEPENDS = "systemd dbus"
 PR = "r1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
