@@ -7,12 +7,14 @@ A layer to provide IVI related functionality in an OpenEmbedded Linux system.
 ## Dependencies
 
 This layer currently depends on:
+
 * poky (and meta-oe)
 
 ### Optional dependencies
 
 These are optional dependencies which we have additions for through the layers
 functions described below:
+
 * meta-qt5
 * meta-ivi
 * meta-openembedded/meta-ruby
@@ -22,11 +24,11 @@ functions described below:
 ## Layers
 
 Depending on included layers used together with meta-bistro additional
-functionality is added from the layers/\*/ directories. This is done by adding
-the layers/\* directory if the name is in the BBFILE_COLLECTIONS variable, as
-defined in the conf/layer.conf file.
+functionality is added from the `layers/*/` directories. This is done by adding
+the `layers/*` directory if the name is in the `BBFILE_COLLECTIONS` variable,
+as defined in the `conf/layer.conf` file.
 
-The BBFILE_COLLECTIONS contains the names as given by each respective meta
+The `BBFILE_COLLECTIONS` contains the names as given by each respective meta
 layer, and hence the names of the directories can not be changed by us directly.
 
 The general idea is that These layer additions should only be added to
@@ -38,6 +40,7 @@ This repository is maintained and governed by Pelagicore AB, we will consider
 all contributions and anyone is free to fork this work.
 
 Maintainers:
+
  * Oscar Andreasson <oscar.andreasson@pelagicore.com>
  * Igor Socec <igor.socec@pelagicore.com>
 
