@@ -26,9 +26,6 @@ PREFERRED_VERSION_gupnp-av ?= "0.12.4"
 SDK_NAME = "${DISTRO}-${TCLIBC}-${SDK_ARCH}-${TARGET_ARCH}"
 SDKPATH = "/opt/${DISTRO}/${SDK_VERSION}"
 
-# What does this actually do? Only for opkg?
-# EXTRAOPKGCONFIG = "poky-feed-config-opkg"
-
 # Override these in bistro based distros to modify DISTRO_EXTRA_R*
 BISTRO_DEFAULT_EXTRA_RDEPENDS = "packagegroup-core-boot"
 BISTRO_DEFAULT_EXTRA_RRECOMMENDS = "kernel-module-af-packet"
