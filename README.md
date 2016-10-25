@@ -35,7 +35,7 @@ meta-bistro if those other layers are available.
 ## Governance
 
 This repository is maintained and governed by Pelagicore AB, we will consider
-all contributions and anyone is free to fork this work. 
+all contributions and anyone is free to fork this work.
 
 Maintainers:
  * Oscar Andreasson <oscar.andreasson@pelagicore.com>
@@ -48,8 +48,8 @@ release has been released, a new branch with the same name will be created
 from the master branch.
 All feature growth should happen first on the master branch, but will also be
 cherry picked back to the latest yocto release branch. Security and bug fixes
-will be evaluated case by case and backported as necessary. The ambition is to 
-actively maintain the four latest releases and/or two year old releases in 
+will be evaluated case by case and backported as necessary. The ambition is to
+actively maintain the four latest releases and/or two year old releases in
 this fashion.
 
 ## License and Copyright
