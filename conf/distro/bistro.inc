@@ -19,18 +19,9 @@ VIRTUAL-RUNTIME_initscripts = " "
 DISTRO_FEATURES =+ " largefile opengl multiarch systemd ptest"
 DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
 
-PREFERRED_VERSION_linux-yocto ?= "3.19%"
-PREFERRED_VERSION_linux-yocto_qemux86 ?= "3.19%"
-PREFERRED_VERSION_linux-yocto_qemux86-64 ?= "3.19%"
-PREFERRED_VERSION_linux-yocto_qemuarm ?= "3.19%"
-PREFERRED_VERSION_linux-yocto_qemumips ?= "3.19%"
-PREFERRED_VERSION_linux-yocto_qemumips64 ?= "3.19%"
-PREFERRED_VERSION_linux-yocto_qemuppc ?= "3.19%"
-
 PREFERRED_VERSION_gupnp ?= "0.20.12"
 PREFERRED_VERSION_gssdp ?= "0.14.8"
 PREFERRED_VERSION_gupnp-av ?= "0.12.4"
-
 
 SDK_NAME = "${DISTRO}-${TCLIBC}-${SDK_ARCH}-${TARGET_ARCH}"
 SDKPATH = "/opt/${DISTRO}/${SDK_VERSION}"
