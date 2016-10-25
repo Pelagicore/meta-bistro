@@ -16,7 +16,7 @@ DISTRO_FEATURES = "alsa argp bluetooth bluez5 ext2 irda largefile pcmcia usbgadg
 
 VIRTUAL-RUNTIME_init_manager = "systemd"
 VIRTUAL-RUNTIME_initscripts = " "
-DISTRO_FEATURES =+ " largefile opengl multiarch systemd ptest"
+DISTRO_FEATURES =+ " largefile multiarch systemd ptest"
 DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
 
 PREFERRED_VERSION_gupnp ?= "0.20.12"
