@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/Pelagicore/softwarecontainer.git;protocol=https;bran
 SRCREV = "c41020da9ceac70f424c029610fe0d8330d73c5a"
 
 DEPENDS = "ivi-logging glibmm dbus-c++ lxc jansson"
-RDEPENDS_${PN} = "iproute2 iptables bridge-utils"
+RDEPENDS_${PN} = "iproute2 iptables dbus-proxy bridge-utils"
 
 inherit cmake systemd pkgconfig
 
@@ -28,17 +28,19 @@ PACKAGECONFIG[dbusgateway] = "-DENABLE_DBUSGATEWAY=ON,-DENABLE_DBUSGATEWAY=OFF"
 PACKAGECONFIG[cgroupsgateway] = "-DENABLE_CGROUPSGATEWAY=ON,-DENABLE_CGROUPSGATEWAY=OFF"
 PACKAGECONFIG ?= "networkgateway devicenodegateway dbusgateway cgroupsgateway"
 
-EXTRA_OECMAKE += "-DENABLE_TEST=OFF -DENABLE_EXAMPLES=OFF"
+EXTRA_OECMAKE += "-DENABLE_TEST=OFF -DENABLE_EXAMPLES=ON"
 
 SYSTEMD_SERVICE_${PN} = "softwarecontainer-agent.service"
 
-PACKAGES = "${PN} ${PN}-dev ${PN}-dbg ${PN}-doc ${PN}-locale"
+PACKAGES = "${PN}-examples ${PN} ${PN}-dev ${PN}-dbg ${PN}-doc ${PN}-locale"
 
 FILES_${PN} += " \
     ${libdir}/libsoftwarecontainercommon.so \
     ${systemd_unitdir}/system \
     ${sysconfdir}/dbus-1 \
 "
+FILES_${PN}-examples = "${datadir}/softwarecontainer/examples/"
+FILES_${PN}-dbg += "${datadir}/softwarecontainer/examples/*/.debug"
 
 INSANE_SKIP_${PN} += "useless-rpaths"
 INSANE_SKIP_${PN}-dev += "useless-rpaths"
