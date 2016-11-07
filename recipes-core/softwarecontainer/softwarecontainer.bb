@@ -12,7 +12,7 @@ PR = "r0"
 PV = "1.0+git${SRCREV}"
 
 SRC_URI = "git://github.com/Pelagicore/softwarecontainer.git;protocol=https;branch=master"
-SRCREV = "bbeb1165b47290bd8e2e6dce33048581337b3fc0"
+SRCREV = "bce6eea71d0c4204c7035cabaf962914d8bfd021"
 
 DEPENDS = "ivi-logging glibmm dbus-c++ lxc jansson"
 RDEPENDS_${PN} = "iproute2 iptables bridge-utils"
@@ -29,11 +29,6 @@ PACKAGECONFIG[cgroupsgateway] = "-DENABLE_CGROUPSGATEWAY=ON,-DENABLE_CGROUPSGATE
 PACKAGECONFIG ?= "networkgateway devicenodegateway dbusgateway cgroupsgateway"
 
 EXTRA_OECMAKE += "-DENABLE_TEST=OFF -DENABLE_EXAMPLES=OFF"
-
-do_install_append() {
-    mkdir -p ${D}${sysconfdir}/dbus-1/system.d/
-    mv ${D}${datadir}/dbus-1/system.d/softwarecontainer-agent.conf ${D}${sysconfdir}/dbus-1/system.d/
-}
 
 SYSTEMD_SERVICE_${PN} = "softwarecontainer-agent.service"
 
