@@ -12,7 +12,7 @@ PR = "r0"
 PV = "1.0+git${SRCREV}"
 
 SRC_URI = "git://github.com/Pelagicore/softwarecontainer.git;protocol=https;branch=master"
-SRCREV = "bce6eea71d0c4204c7035cabaf962914d8bfd021"
+SRCREV = "c41020da9ceac70f424c029610fe0d8330d73c5a"
 
 DEPENDS = "ivi-logging glibmm dbus-c++ lxc jansson"
 RDEPENDS_${PN} = "iproute2 iptables bridge-utils"
