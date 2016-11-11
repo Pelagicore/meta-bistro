@@ -15,16 +15,15 @@ SRC_URI = "git://github.com/Pelagicore/softwarecontainer.git;protocol=https;bran
 SRCREV = "c41020da9ceac70f424c029610fe0d8330d73c5a"
 
 DEPENDS = "ivi-logging glibmm dbus-c++ lxc jansson"
-RDEPENDS_${PN} = "iproute2 iptables dbus-proxy bridge-utils"
 
 inherit cmake systemd pkgconfig
 
 S = "${WORKDIR}/git/"
 
 PACKAGECONFIG[pulsegateway] = "-DENABLE_PULSEGATEWAY=ON,-DENABLE_PULSEGATEWAY=OFF,pulseaudio"
-PACKAGECONFIG[networkgateway] = "-DENABLE_NETWORKGATEWAY=ON,-DENABLE_NETWORKGATEWAY=OFF"
+PACKAGECONFIG[networkgateway] = "-DENABLE_NETWORKGATEWAY=ON,-DENABLE_NETWORKGATEWAY=OFF,,iptables bridge-utils"
 PACKAGECONFIG[devicenodegateway] = "-DENABLE_DEVICENODEGATEWAY=ON,-DENABLE_DEVICENODEGATEWAY=OFF"
-PACKAGECONFIG[dbusgateway] = "-DENABLE_DBUSGATEWAY=ON,-DENABLE_DBUSGATEWAY=OFF"
+PACKAGECONFIG[dbusgateway] = "-DENABLE_DBUSGATEWAY=ON,-DENABLE_DBUSGATEWAY=OFF,,dbus-proxy"
 PACKAGECONFIG[cgroupsgateway] = "-DENABLE_CGROUPSGATEWAY=ON,-DENABLE_CGROUPSGATEWAY=OFF"
 PACKAGECONFIG ?= "networkgateway devicenodegateway dbusgateway cgroupsgateway"
 
