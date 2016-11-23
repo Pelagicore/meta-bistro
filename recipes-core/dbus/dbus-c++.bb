@@ -12,17 +12,21 @@ DEPENDS_remove_class-native = " dbus-c++-native "
 SRCREV = "1f6f3e6e966e0b453edc4a82338dc27966c37505"
 
 PE = "1"
-PV = "0.6.0-pre1+gitr${SRCPV}"
+PV = "0.9.0-${SRCPV}"
 
 SRC_URI = " \
     git://git@github.com/Pelagicore/dbus-cplusplus.git;protocol=https \
-	file://dbus-c++.patch \
-	"
+    file://dbus-c++.patch \
+"
 
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 EXTRA_OECONF += "--disable-ecore --disable-tests --with-build-libdbus-cxx=${STAGING_LIBDIR_NATIVE}"
+
+# Adjust Dual ABI for GCC 5, "uninative" bbclass sets the default value
+BUILD_CXXFLAGS_remove = "-D_GLIBCXX_USE_CXX11_ABI=0"
+BUILD_CXXFLAGS += "-D_GLIBCXX_USE_CXX11_ABI=1"
 
 # Fix some build issues
 do_configure_append () {
