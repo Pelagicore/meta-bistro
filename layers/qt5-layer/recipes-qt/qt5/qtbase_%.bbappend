@@ -8,27 +8,13 @@ inherit update-alternatives
 # have to copy the default values and add our changes.
 
 PACKAGECONFIG += " \
-    release \
-    dbus \
-    udev \
-    evdev \
-    widgets \
-    openssl \
-    icu \
-    gles2 \
-    alsa \
     accessibility \
-    ${PACKAGECONFIG_GL} \
-    ${PACKAGECONFIG_FB} \
-    ${PACKAGECONFIG_X11} \
-    ${PACKAGECONFIG_FONTS} \
-    ${PACKAGECONFIG_SYSTEM} \
-    ${PACKAGECONFIG_MULTIMEDIA} \
-    ${PACKAGECONFIG_DISTRO} \
+    alsa \
+    gles2 \
+    icu \
+    openssl \
     sql-sqlite \
 "
-
-PACKAGECONFIG[xkb] = "-xkb,-no-xkb -no-xkbcommon,libxkbcommon"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/qtbase:"
 
