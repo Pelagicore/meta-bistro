@@ -8,17 +8,8 @@ inherit packagegroup
 
 RDEPENDS_${PN} += " \
          qtbase \
-         qtbase-plugins \
-         qtbase-fonts \
          qtdeclarative \
-         qtdeclarative-plugins \
-         qtdeclarative-qmlplugins \
-         qtdeclarative-tools \
          qtmultimedia \
-         qtmultimedia-plugins \
-         qtmultimedia-qmlplugins \
          qtwebkit \
-         qtwebkit-qmlplugins \
          qtsvg \
-         qtsvg-plugins \
          "
