@@ -17,9 +17,7 @@ functions described below:
 
 * meta-qt5
 * meta-ivi
-* meta-openembedded/meta-ruby
 * meta-openembedded/meta-multimedia
-* meta-openembedded/meta-ruby (for qtwebkit)
 
 ## Layers
 
