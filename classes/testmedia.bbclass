@@ -30,18 +30,19 @@ python () {
         return files
 
     def get_used_extensions():
-        ftypes = []
+        exts = []
         for pack in d.getVar("FILEEXTENSIONS_PACKS", True).split(" "):
             pack = d.expand("${FILEEXTENSIONS_"+pack.upper()+"}").split()
-            ftypes.extend(pack)
+            exts.extend(pack)
 
         # Remove extension with no files present
-        for ftype in ftypes:
-            files = bb.utils.find_all_with_ext(d.expand("${WORKDIR}"), ftype)
-            if not files:
-                ftypes.remove(ftype)
+        used_exts = []
+        for ext in exts:
+            files = bb.utils.find_all_with_ext(d.expand("${WORKDIR}"), ext)
+            if files:
+                used_exts.append(ext)
 
-        return ftypes
+        return used_exts
 
     # "monkeypatch export" the find_all_with_ext and get_used_extensions
     # functions via bb.utils
@@ -95,7 +96,7 @@ python populate_packages_prepend () {
     newpackages = []
     ftypes = bb.utils.get_used_extensions()
     for ftype in ftypes:
-        newpackages.append(d.expand(' ${PN}-' + ftype))
+        newpackages.append(d.expand('${PN}-' + ftype))
         d.setVar(d.expand('FILES_${PN}-' + ftype),
                  d.expand('${datadir}/${PN}/' + ftype))
 
