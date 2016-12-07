@@ -9,6 +9,7 @@ inherit packagegroup
 RDEPENDS_${PN} += " \
          qtbase \
          qtdeclarative \
+         qtdeclarative-tools \
          qtmultimedia \
          qtwebkit \
          qtsvg \
