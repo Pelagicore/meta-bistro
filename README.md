@@ -8,16 +8,18 @@ A layer to provide IVI related functionality in an OpenEmbedded Linux system.
 
 This layer currently depends on:
 
-* poky (and meta-oe)
+* poky (http://git.yoctoproject.org/cgit/cgit.cgi/poky)
+* meta-openembedded (http://cgit.openembedded.org/meta-openembedded/)
 
 ### Optional dependencies
 
 These are optional dependencies which we have additions for through the layers
 functions described below:
 
-* meta-qt5
-* meta-ivi
+* meta-qt5 (https://github.com/meta-qt5/meta-qt5)
+* meta-ivi (https://github.com/GENIVI/meta-ivi)
 * meta-openembedded/meta-multimedia
+* meta-openembedded/meta-networking
 
 ## Layers
 
