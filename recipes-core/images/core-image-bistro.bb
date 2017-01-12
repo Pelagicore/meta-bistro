@@ -1,5 +1,5 @@
 #
-#   Copyright (C) 2015 Pelagicore AB
+#   Copyright (C) 2015-2017 Pelagicore AB
 #
 DESCRIPTION = "Image for creating a small bootable Bistro-based image"
 
@@ -17,7 +17,7 @@ IMAGE_INSTALL += "systemd-additional-units"
 # Include bluetooth if the machine supports it (MACHINE_FEATURES), and it has
 # been selected in DISTRO_FEATURES.
 IMAGE_INSTALL += "\
-    ${@base_contains("COMBINED_FEATURES", "bluetooth", "packagegroup-tools-bluetooth", "", d)} \
+    ${@bb.utils.contains("COMBINED_FEATURES", "bluetooth", "packagegroup-tools-bluetooth", "", d)} \
 "
 
 TOOLCHAIN_HOST_TASK += "nativesdk-cmake"
