@@ -9,7 +9,6 @@ inherit update-alternatives
 
 PACKAGECONFIG += " \
     accessibility \
-    alsa \
     gles2 \
     icu \
     openssl \
