@@ -10,6 +10,7 @@ inherit update-alternatives
 PACKAGECONFIG += " \
     accessibility \
     gles2 \
+    fontconfig \
     icu \
     openssl \
     sql-sqlite \
