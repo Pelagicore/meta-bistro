@@ -17,7 +17,7 @@ SRC_URI += "\
     file://softwarecontainer-agent.service \
 "
 
-SRCREV = "5c9e9550212feb7e5bb30215d22396d6eb20a5e4"
+SRCREV = "2487754b3a1bb2e54e4c8f35eb7258338b69e8bc"
 
 DEPENDS = "ivi-logging glibmm lxc jansson"
 
