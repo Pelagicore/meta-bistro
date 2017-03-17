@@ -1,7 +1,7 @@
 #
-#   Copyright (C) 2015 Pelagicore AB
+#   Copyright (C) 2017 Pelagicore AB
 #
-DESCRIPTION = "Packagegroups which adds some tools to Bistro that is potentially useful during development."
+DESCRIPTION = "Packagegroups that add useful development tools to meta-bistro."
 LICENSE = "MIT"
 
 PR = "r1"
@@ -14,17 +14,20 @@ PACKAGES = "\
     "
 
 RDEPENDS_packagegroup-bistro-utils= "\
-    fbset \
-    ldd \
-    vim \
-    gawk \
-    ethtool \
-    connman-client \
     alsa-utils-amixer \
     alsa-utils-alsamixer \
+    connman-client \
+    ethtool \
+    fbset \
+    gawk \
     gdbserver \
+    ldd \
+    lsof \
+    ltrace \
+    net-tools \
+    perf \
     rsync \
-    valgrind \
     swaplogger \
+    valgrind \
+    vim \
     "
-
