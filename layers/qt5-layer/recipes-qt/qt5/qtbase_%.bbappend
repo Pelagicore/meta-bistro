@@ -9,9 +9,12 @@ inherit update-alternatives
 
 PACKAGECONFIG += " \
     accessibility \
+    eglfs \
+    gbm \
     gles2 \
     fontconfig \
     icu \
+    kms \
     openssl \
     sql-sqlite \
 "
