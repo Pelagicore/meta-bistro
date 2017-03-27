@@ -15,7 +15,6 @@ PACKAGECONFIG += " \
     fontconfig \
     icu \
     kms \
-    openssl \
     sql-sqlite \
 "
 
