@@ -41,8 +41,8 @@ all contributions and anyone is free to fork this work.
 
 Maintainers:
 
+ * Gordan Markus <gordan.markus@pelagicore.com>
  * Oscar Andreasson <oscar.andreasson@pelagicore.com>
- * Igor Socec <igor.socec@pelagicore.com>
 
 ## Branching
 
