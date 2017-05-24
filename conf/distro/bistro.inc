@@ -52,7 +52,6 @@ git://.*/.*   http://downloads.yoctoproject.org/mirror/sources/ \n \
 hg://.*/.*    http://downloads.yoctoproject.org/mirror/sources/ \n \
 osc://.*/.*   http://downloads.yoctoproject.org/mirror/sources/ \n \
 p4://.*/.*    http://downloads.yoctoproject.org/mirror/sources/ \n \
-svk://.*/.*   http://downloads.yoctoproject.org/mirror/sources/ \n \
 svn://.*/.*   http://downloads.yoctoproject.org/mirror/sources/ \n"
 
 MIRRORS =+ "\
