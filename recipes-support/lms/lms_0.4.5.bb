@@ -21,3 +21,4 @@ SRC_URI = "git://github.com/profusion/lightmediascanner.git \
 S = "${WORKDIR}/git"
 
 FILES_${PN} += "${libdir}/lightmediascanner/plugins/*.so"
+FILES_${PN}-dev += "${libdir}/lightmediascanner/plugins/*.la"
