@@ -9,6 +9,7 @@ HOMEPAGE = "https://github.com/profusion/lightmediascanner"
 inherit autotools pkgconfig gettext
 
 DEPENDS = "sqlite3"
+RDEPENDS_${PN} = "libflac mp4v2 libvorbis libogg"
 
 PR = "r0"
 
