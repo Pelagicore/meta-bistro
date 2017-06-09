@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb3014b036b6d2151d944aef6a84c36f"
 DEPENDS = ""
 
 PV = "2.0.0"
-SRC_URI = "https://mp4v2.googlecode.com/files/mp4v2-2.0.0.tar.bz2"
+SRC_URI = "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/mp4v2/mp4v2-2.0.0.tar.bz2"
 SRC_URI[md5sum] = "c91f06711225b34b4c192c9114887b14"
 SRC_URI[sha256sum] = "0319b9a60b667cf10ee0ec7505eb7bdc0a2e21ca7a93db96ec5bd758e3428338"
 
