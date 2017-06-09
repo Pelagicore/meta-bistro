@@ -15,7 +15,7 @@ PR = "r0"
 EXTRA_OECONF += "--program-prefix=lms-"
 
 SRCREV = "454be49d1fd22c82d78bddd91f61e478c50b8aa0"
-SRC_URI = "git://git.profusion.mobi/lightmediascanner.git \
+SRC_URI = "git://github.com/profusion/lightmediascanner.git \
 	   file://0001-Install-binaries-in-bin-directory.patch"
 
 S = "${WORKDIR}/git"
