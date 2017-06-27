@@ -1,6 +1,5 @@
 #
 #   Copyright (C) 2016 - 2017 Pelagicore AB
-#   All rights reserved.
 #
 
 DESCRIPTION = "The SoftwareContainer framework"
