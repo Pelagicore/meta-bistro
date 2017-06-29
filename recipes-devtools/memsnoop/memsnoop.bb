@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2017 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 
 LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/memsnoop.c;md5=e9b4cbdfa8db5882746a4349e74c119f"

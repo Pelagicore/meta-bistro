@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 DESCRIPTION = "PEAK CAN Bus Driver" 
 HOMEPAGE = "http://www.peak-system.com/fileadmin/media/linux/index.htm"
 LICENSE = "GPLv2" 

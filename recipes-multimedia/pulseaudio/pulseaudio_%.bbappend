@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 DEPENDS := "${@oe_filter_out('gconf', '${DEPENDS}', d)}"
 EXTRA_OECONF += " --disable-gconf "
 

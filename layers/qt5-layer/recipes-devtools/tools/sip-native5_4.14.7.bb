@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 DESCRIPTION = "SIP is a C++/Python Wrapper Generator"
 AUTHOR = "Phil Thompson"
 HOMEPAGE = "http://www.riverbankcomputing.co.uk/sip"

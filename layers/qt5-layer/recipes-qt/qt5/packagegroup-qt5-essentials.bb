@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 DESCRIPTION = "All Qt5 Essentials modules"
 LICENSE = "MIT"
 

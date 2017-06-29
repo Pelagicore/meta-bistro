@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2016 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 
 DESCRIPTION = "A small test program to show a RGB test image on a screen."
 HOMEPAGE = "http://www.pelagicore.com"

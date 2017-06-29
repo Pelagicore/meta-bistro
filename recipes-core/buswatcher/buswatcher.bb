@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 DESCRIPTION = "buswatcher"
 SECTION = "multimedia"
 LICENSE = "LGPLv2.1"

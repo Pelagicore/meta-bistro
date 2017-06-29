@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 require ${PN}.inc
 
 SRC_URI = "${GIT_REPO};branch=master"

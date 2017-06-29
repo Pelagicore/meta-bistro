@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2017 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 DESCRIPTION = "Packagegroups that add useful development tools to meta-bistro."
 LICENSE = "MIT"
 

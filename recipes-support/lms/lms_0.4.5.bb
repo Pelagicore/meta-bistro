@@ -1,5 +1,7 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
+#
+#   SPDX-License-Identifier: MIT
 
 DESCRIPTION = "Lightweight media scanner meant to be used in not-so-powerful devices, like embedded systems or old machines."
 LICENSE = "LGPLv2.1"

@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 python () {
     rdep = d.getVar('RDEPENDS_packagegroup-abstract-component-p1', d, 1)
     if rdep:

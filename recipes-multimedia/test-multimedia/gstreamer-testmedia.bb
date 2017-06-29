@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2016 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 #
 DESCRIPTION = "GStreamer multimedia test files downloaded from Pelagicore mirror"
 

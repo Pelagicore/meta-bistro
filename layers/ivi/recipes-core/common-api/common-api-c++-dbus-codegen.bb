@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 DESCRIPTION = "common-api-c++-native"
 HOMEPAGE = "http://www.pelagicore.com"
 LICENSE = "MPL-2.0"

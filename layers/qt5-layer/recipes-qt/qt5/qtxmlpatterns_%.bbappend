@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 inherit update-alternatives
 
 ALTERNATIVE_qtxmlpatterns-tools = "xmlpatterns xmlpatternsvalidator"

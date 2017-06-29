@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 DESCRIPTION = "Additional systemd units for user-sessions"
 HOMEPAGE = "https://github.com/sofar/user-session-units"
 LICENSE = "LGPLv2"

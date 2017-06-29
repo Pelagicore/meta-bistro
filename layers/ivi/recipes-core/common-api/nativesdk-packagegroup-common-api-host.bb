@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 SUMMARY = "Host packages for Common API code generation"
 PR = "r12"
 LICENSE = "MIT"

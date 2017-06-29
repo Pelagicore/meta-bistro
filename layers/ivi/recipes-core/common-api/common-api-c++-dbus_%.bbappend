@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2016 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 
 # add native dependencies for CommonAPI code generator
 DEPENDS += "\

@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 SUMMARY = "Customized runqemu script"
 LICENSE = "GPLv2"
 
