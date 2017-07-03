@@ -1,3 +1,8 @@
+#
+#   Copyright (C) 2015 Pelagicore AB
+#
+#   SPDX-License-Identifier: MIT
+#
 SUMMARY = "Jansson is a C library for encoding, decoding and manipulating JSON data"
 HOMEPAGE = "http://www.digip.org/jansson/"
 LICENSE = "MIT"
