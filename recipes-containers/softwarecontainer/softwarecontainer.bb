@@ -1,6 +1,8 @@
 #
 #   Copyright (C) 2016 - 2017 Pelagicore AB
 #
+#   SPDX-License-Identifier: MIT
+#
 
 DESCRIPTION = "The SoftwareContainer framework"
 HOMEPAGE = "https://github.com/Pelagicore/softwarecontainer"
