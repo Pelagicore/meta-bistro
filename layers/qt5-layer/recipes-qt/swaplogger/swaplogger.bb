@@ -14,7 +14,7 @@ LICENSE = "Nokia"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d25f5ab7fee8539cd6db2dcf074cece6"
 
 SRC_URI = " \
-       git://github.com/mer-tools/swaplogger.git;branch=master \
+       git://github.com/mer-tools/swaplogger.git;protocol=https;branch=master \
        file://fix_makefile.patch \
        "
 

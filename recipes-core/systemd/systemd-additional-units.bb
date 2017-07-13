@@ -12,7 +12,7 @@ PR = "r1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 SRC_URI = " \
-	git://github.com/sofar/user-session-units.git;protocol=git \
+	git://github.com/sofar/user-session-units.git;protocol=https \
 	file://dbus-socket-run-dir.patch \
 	file://light.target \
 	"
