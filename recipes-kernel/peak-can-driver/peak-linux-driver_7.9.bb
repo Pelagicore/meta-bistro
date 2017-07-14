@@ -20,13 +20,17 @@ do_install() {
   oe_runmake install DESTDIR=${D}
 }
 
-PACKAGES =. "${PN}-tools"
-
-FILES_${PN} += " \
-    usr/lib*${SOLIBS} \
+PACKAGES = "\
+    ${PN}       \
+    ${PN}-tools \
 "
 
-FILES_${PN}-tools += " \
-    /usr/local/bin/pcan_make_devices \
+FILES_${PN} += "\
+    ${libdir}            \
+    ${libdir}/*${SOLIBS} \
+"
+
+FILES_${PN}-tools += "\
+    ${bindir}/pcan_make_devices \
 "
 
