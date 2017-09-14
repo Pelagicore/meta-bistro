@@ -18,7 +18,7 @@ RDEPENDS_${PN} = " \
     bluez5 \
     "
 
-RRECOMMENDS = " ofono "
+RRECOMMENDS_${PN} = " ofono "
 
 PV = "0.1+git${SRCREV}"
 PR = "r0"
