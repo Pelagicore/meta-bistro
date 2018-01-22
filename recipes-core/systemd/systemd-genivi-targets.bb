@@ -1,6 +1,8 @@
 DESCRIPTION = "Systemd targets used by GENIVI Lifecycle components"
 LICENSE = "GPLv2"
 
+inherit allarch
+
 SRC_URI = " \
 	file://lazy.target \
 	file://focussed.target\
