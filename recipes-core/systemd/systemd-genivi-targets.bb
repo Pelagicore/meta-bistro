@@ -5,7 +5,10 @@ SRC_URI = " \
 	file://lazy.target \
 	file://focussed.target\
 	file://unfocussed.target \
+	file://COPYING \
 "
+
+LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
