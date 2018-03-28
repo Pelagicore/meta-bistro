@@ -24,6 +24,7 @@ below:
 
 * meta-qt5 (https://github.com/meta-qt5/meta-qt5)
 * meta-ivi (https://github.com/GENIVI/meta-ivi)
+* meta-virtualization
 * meta-openembedded/meta-multimedia
 * meta-openembedded/meta-networking
 
