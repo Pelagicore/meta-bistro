@@ -2,8 +2,8 @@
 
 # meta-bistro
 
-A Yocto/OpenEmbedded layer that provides IVI related functionality in an
-OpenEmbedded Linux system.
+A Yocto/OpenEmbedded layer that provides in-vehicle infotainment (IVI) 
+related functionality in an OpenEmbedded Linux system.
 
 This layer aggregates original IVI related software recipes for software
 components developed by Pelagicore. In addition, the layer contains
