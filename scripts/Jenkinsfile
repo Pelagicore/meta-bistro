@@ -1,0 +1,30 @@
+#!/usr/bin/groovy
+
+// Copyright (C) Luxoft Sweden AB 2018
+
+void buildBistro(String variant, String imageName) {
+    String bistroDir = "meta-bistro"
+    node("Yocto") {
+        dir(bistroDir) {
+            checkout scm
+        }
+
+        // Initialize pelux-manifests to get the code
+        sh "rm -rf pelux-manifests/"
+        sh "git clone https://github.com/Pelagicore/pelux-manifests.git"
+
+        dir('pelux-manifests') {
+            def code = load "ci-scripts/yocto.groovy"
+            String bistroPath = "${env.WORKSPACE}/${bistroDir}"
+            code.buildWithLayer(variant, imageName, bistroDir, bistroPath)
+        }
+    }
+}
+
+parallel (
+    'intel':        { buildBistro("intel",        "core-image-pelux-minimal") },
+    'intel-qtauto': { buildBistro("intel-qtauto", "core-image-pelux-qtauto-neptune") },
+    'rpi':          { buildBistro("rpi",          "core-image-pelux-minimal") },
+    'rpi-qtauto':   { buildBistro("rpi-qtauto",   "core-image-pelux-qtauto-neptune") }
+)
+
