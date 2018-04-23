@@ -54,12 +54,12 @@ Maintainers:
 
 ## Branching
 
-This repository will follow the yocto release system. Whenever a new yocto
+This repository will follow the Yocto release system. Whenever a new Yocto
 release has been released, a new branch with the same name will be created
 from the master branch.
 
 All feature growth should happen first on the master branch, but will also be
-cherry picked back to the latest yocto release branch. Security and bug fixes
+cherry picked back to the latest Yocto release branch. Security and bug fixes
 will be evaluated case by case and backported as necessary. The ambition is to
 actively maintain the two latest releases and/or one year old releases in
 this fashion.
