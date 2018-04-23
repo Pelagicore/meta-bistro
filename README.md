@@ -1,6 +1,6 @@
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
-
 # meta-bistro
+
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
 A Yocto/OpenEmbedded layer that provides in-vehicle infotainment (IVI) 
 related functionality in an OpenEmbedded Linux system.
