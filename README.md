@@ -14,19 +14,23 @@ that are relevant for the aforementioned functionality.
 
 This layer currently depends on:
 
-* poky (http://git.yoctoproject.org/cgit/cgit.cgi/poky)
-* meta-openembedded (http://cgit.openembedded.org/meta-openembedded/)
+| meta layer             | git repo |
+| ---------------------- |----------|
+| poky                   | http://git.yoctoproject.org/cgit/cgit.cgi/poky |
+| meta-openembedded      | http://cgit.openembedded.org/meta-openembedded |
 
 ### Optional dependencies
 
 These are optional dependencies for the specific layer additions described
 below:
 
-* meta-qt5 (https://github.com/meta-qt5/meta-qt5)
-* meta-ivi (https://github.com/GENIVI/meta-ivi)
-* meta-virtualization
-* meta-openembedded/meta-multimedia
-* meta-openembedded/meta-networking
+| meta layer             | git repo |
+| ---------------------- |----------|
+| meta-qt5               | https://github.com/meta-qt5/meta-qt5 |
+| meta-ivi               | https://github.com/GENIVI/meta-ivi |
+| meta-virtualization    | |
+| meta-openembedded/meta-multimedia | |
+| meta-openembedded/meta-networking | |
 
 ## Layers
 
