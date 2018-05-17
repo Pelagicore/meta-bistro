@@ -25,6 +25,8 @@ parallel (
     'intel':        { buildBistro("intel",        "core-image-pelux-minimal") },
     'intel-qtauto': { buildBistro("intel-qtauto", "core-image-pelux-qtauto-neptune") },
     'rpi':          { buildBistro("rpi",          "core-image-pelux-minimal") },
-    'rpi-qtauto':   { buildBistro("rpi-qtauto",   "core-image-pelux-qtauto-neptune") }
+    'rpi-qtauto':   { buildBistro("rpi-qtauto",   "core-image-pelux-qtauto-neptune") },
+    'arp':          { buildBistro("arp",          "core-image-pelux-minimal") },
+    'arp-qtauto':   { buildBistro("arp-qtauto",   "core-image-pelux-qtauto-neptune") }
 )
 
