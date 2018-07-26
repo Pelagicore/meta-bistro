@@ -10,14 +10,8 @@ inherit update-alternatives
 # have to copy the default values and add our changes.
 
 PACKAGECONFIG += " \
-    accessibility \
-    eglfs \
     gbm \
-    gles2 \
-    fontconfig \
-    icu \
     kms \
-    sql-sqlite \
 "
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/qtbase:"
