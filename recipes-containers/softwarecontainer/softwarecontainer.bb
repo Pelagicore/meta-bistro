@@ -17,7 +17,7 @@ SRC_URI = "gitsm://github.com/Pelagicore/softwarecontainer.git;protocol=https;br
 SRC_URI += "\
     file://softwarecontainer-agent.service \
 "
-SRCREV = "4ec2208e5a09b96bf911e6f2c39d8e56beccac75"
+SRCREV = "293d8f07c146fb3469868f79377a46b53771ab57"
 
 DEPENDS = "ivi-logging glibmm lxc jansson dbus-glib"
 
