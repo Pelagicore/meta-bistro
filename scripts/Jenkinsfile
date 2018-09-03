@@ -21,12 +21,14 @@ void buildBistro(String variant, String imageName) {
     }
 }
 
-parallel (
-    'intel':        { buildBistro("intel",        "core-image-pelux-minimal") },
-    'intel-qtauto': { buildBistro("intel-qtauto", "core-image-pelux-qtauto-neptune") },
-    'rpi':          { buildBistro("rpi",          "core-image-pelux-minimal") },
-    'rpi-qtauto':   { buildBistro("rpi-qtauto",   "core-image-pelux-qtauto-neptune") },
-    'arp':          { buildBistro("arp",          "core-image-pelux-minimal") },
-    'arp-qtauto':   { buildBistro("arp-qtauto",   "core-image-pelux-qtauto-neptune") }
-)
+def variantMap = [:]
+def variantList = env.VARIANT_LIST.split()
 
+variantList.each {
+    def list = it.split(":")
+    variantMap["${list[0]}"] = {
+        buildBistro(list[0], list[1])
+    }
+}
+
+parallel (variantMap)
