@@ -3,7 +3,7 @@
 #
 #   SPDX-License-Identifier: MIT
 #
-DEPENDS := "${@oe_filter_out('gconf', '${DEPENDS}', d)}"
+DEPENDS := "${@oe.utils.str_filter_out('gconf', '${DEPENDS}', d)}"
 EXTRA_OECONF += " --disable-gconf "
 
 RDEPENDS_pulseaudio-server += " \
