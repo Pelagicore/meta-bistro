@@ -1,7 +1,5 @@
 # meta-bistro
 
-[![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
-
 A Yocto/OpenEmbedded layer that provides in-vehicle infotainment (IVI) 
 related functionality in an OpenEmbedded Linux system.
 
@@ -10,13 +8,15 @@ components developed by Pelagicore. In addition, the layer contains
 appendments to other open source Yocto/OpenEmbedded layer recipes
 that are relevant for the aforementioned functionality.
 
+Maintained at https://github.com/pelagicore/meta-bistro
+
 ## Dependencies
 
 This layer currently depends on:
 
 | meta layer             | git repo |
 | ---------------------- |----------|
-| poky                   | http://git.yoctoproject.org/cgit/cgit.cgi/poky |
+| poky                   | https://git.yoctoproject.org/git/poky |
 | meta-openembedded      | http://cgit.openembedded.org/meta-openembedded |
 
 ### Optional dependencies
@@ -25,12 +25,13 @@ These are optional dependencies for the specific layer additions described
 below:
 
 | meta layer             | git repo |
-| ---------------------- |----------|
-| meta-qt5               | https://github.com/meta-qt5/meta-qt5 |
+| ---------------------- | -------- |
 | meta-ivi               | https://github.com/GENIVI/meta-ivi |
-| meta-virtualization    | |
+| meta-qt5               | https://code.qt.io/yocto/meta-qt5.git |
+| meta-virtualization    | https://git.yoctoproject.org/git/meta-virtualization |
 | meta-openembedded/meta-multimedia | |
 | meta-openembedded/meta-networking | |
+| meta-openembedded/meta-python | |
 
 ## Layers
 
@@ -46,16 +47,6 @@ The general idea is that these layer additions should only be added to
 meta-bistro if the original layers are available in the current build system
 setup.
 
-## Governance
-
-This repository is maintained and governed by Pelagicore AB, we will consider
-all contributions and anyone is free to fork this work.
-
-Maintainers:
-
- * Gordan Markus <gordan.markus@pelagicore.com>
- * Oscar Andreasson <oscar.andreasson@pelagicore.com>
-
 ## Branching
 
 This repository will follow the Yocto release system. Whenever a new Yocto
@@ -70,7 +61,8 @@ this fashion.
 
 ## License and Copyright
 
-Copyright (C) 2015-2017 Pelagicore AB
+Copyright (C) 2015-2017 Pelagicore AB  
+Copyright (C) 2017-2018 Luxoft Sweden AB
 
 All metadata is MIT licensed unless otherwise stated. Source code included
 in tree for individual recipes is under the LICENSE stated in the associated
