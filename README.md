@@ -29,6 +29,7 @@ below:
 | meta-ivi               | https://github.com/GENIVI/meta-ivi |
 | meta-qt5               | https://code.qt.io/yocto/meta-qt5.git |
 | meta-virtualization    | https://git.yoctoproject.org/git/meta-virtualization |
+| meta-openembedded/meta-filesystems | |
 | meta-openembedded/meta-multimedia | |
 | meta-openembedded/meta-networking | |
 | meta-openembedded/meta-python | |
