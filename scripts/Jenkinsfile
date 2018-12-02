@@ -1,9 +1,19 @@
 #!/usr/bin/groovy
 
-// Copyright (C) Luxoft Sweden AB 2018
+// Copyright (C) 2018 Luxoft Sweden AB
 
 void buildBistro(String variant, String imageName) {
     String bistroDir = "meta-bistro"
+    String branchName = "master"
+
+    // If this is a PR, CHANGE_TARGET will be set by the Pipeline Plugin,
+    // otherwise check BRANCH_NAME which is set by Jenkins
+    if (env.CHANGE_TARGET) {
+        branchName = "${env.CHANGE_TARGET}"
+    } else if (env.BRANCH_NAME) {
+        branchName = "${env.BRANCH_NAME}"
+    }
+
     node("Yocto") {
         dir(bistroDir) {
             checkout scm
@@ -11,7 +21,7 @@ void buildBistro(String variant, String imageName) {
 
         // Initialize pelux-manifests to get the code
         sh "rm -rf pelux-manifests/"
-        sh "git clone https://github.com/Pelagicore/pelux-manifests.git"
+        sh "git clone https://github.com/Pelagicore/pelux-manifests.git -b ${branchName}"
 
         dir('pelux-manifests') {
             def code = load "ci-scripts/yocto.groovy"
@@ -32,4 +42,3 @@ variantList.each {
 }
 
 parallel (variantMap)
-
