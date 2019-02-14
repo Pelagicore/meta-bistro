@@ -1,5 +1,6 @@
 #
 #   Copyright (C) 2017 Pelagicore AB
+#   Copyright (C) 2019 Luxoft Sweden AB
 #
 #   SPDX-License-Identifier: MIT
 #
@@ -34,7 +35,6 @@ RDEPENDS_packagegroup-bistro-debug-utils = " \
     ldd                                      \
     ltrace                                   \
     swaplogger                               \
-    systemd-additional-units                 \
     systemd-analyze                          \
     strace                                   \
     valgrind                                 \
