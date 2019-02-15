@@ -62,8 +62,8 @@ this fashion.
 
 ## License and Copyright
 
-Copyright (C) 2015-2017 Pelagicore AB  
-Copyright (C) 2017-2018 Luxoft Sweden AB
+Copyright &copy; 2015-2017 Pelagicore AB  
+Copyright &copy; 2017-2019 Luxoft Sweden AB
 
 All metadata is MIT licensed unless otherwise stated. Source code included
 in tree for individual recipes is under the LICENSE stated in the associated
