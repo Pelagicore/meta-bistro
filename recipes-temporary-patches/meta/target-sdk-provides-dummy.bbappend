@@ -1,0 +1,3 @@
+DUMMYPROVIDES += " \
+    perl-module-overload \
+"
