@@ -7,7 +7,7 @@ HOMEPAGE = "https://github.com/Pelagicore/gdbus-codegen-glibmm"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4fbd65380cdd255951079008b364516c"
 DEPENDS = "python3-jinja2-native python3-markupsafe-native"
-SRCREV = "5325d4fc92924102a8427fb6964a19b3a0ca2a7c"
+SRCREV = "88cdc7b81b7509647637419c9dffa7b50fae8fc8"
 
 SRC_URI = "git://github.com/pelagicore/gdbus-codegen-glibmm;branch=master"
 
@@ -25,4 +25,3 @@ RDEPENDS_${PN} = "python3 python3-setuptools python3-jinja2"
 BBCLASSEXTEND = "native nativesdk"
 
 PACKAGE =+ "${PN}"
-
