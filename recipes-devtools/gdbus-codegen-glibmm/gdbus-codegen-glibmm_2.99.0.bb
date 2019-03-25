@@ -7,7 +7,7 @@ HOMEPAGE = "https://github.com/Pelagicore/gdbus-codegen-glibmm"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4fbd65380cdd255951079008b364516c"
 DEPENDS = "python3-jinja2-native python3-markupsafe-native"
-SRCREV = "88cdc7b81b7509647637419c9dffa7b50fae8fc8"
+SRCREV = "c4ed6e0f6cdc21d41503e8312108e21715dceb2d"
 
 SRC_URI = "git://github.com/pelagicore/gdbus-codegen-glibmm;branch=master"
 
