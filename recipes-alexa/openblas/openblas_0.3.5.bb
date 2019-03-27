@@ -28,6 +28,7 @@ def map_arch(a, d):
         elif re.match('x86_64$', a): return 'ATOM'
         elif re.match('aarch32$', a): return 'CORTEXA9'
         elif re.match('aarch64$', a): return 'ARMV8'
+        elif re.match('arm$', a): return 'ARMV7'
         return a
 
 def map_bits(a, d):
@@ -36,11 +37,17 @@ def map_bits(a, d):
         elif re.match('x86_64$', a): return 64
         elif re.match('aarch32$', a): return 32
         elif re.match('aarch64$', a): return 64
+        elif re.match('arm$', a): return 32
         return 32
+
+def map_extra_options(a, d):
+        import re
+        if re.match('arm$', a): return '-mfpu=neon-vfpv4 -mfloat-abi=hard'
+        return ''
 
 do_compile () {
         oe_runmake HOSTCC="${BUILD_CC}"                                         \
-                                CC="${TARGET_PREFIX}gcc ${TOOLCHAIN_OPTIONS}" \
+                                CC="${TARGET_PREFIX}gcc ${TOOLCHAIN_OPTIONS} ${@map_extra_options(d.getVar('TARGET_ARCH', True), d)}" \
                                 PREFIX=${exec_prefix} \
                                 CROSS_SUFFIX=${HOST_PREFIX} \
                                 ONLY_CBLAS=1 BINARY='${@map_bits(d.getVar('TARGET_ARCH', True), d)}' \
