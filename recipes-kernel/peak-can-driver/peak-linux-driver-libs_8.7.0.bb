@@ -1,6 +1,6 @@
 #
 #   Copyright (C) 2015 Pelagicore AB
-#   Copyright (C) 2018 Luxoft Sweden AB
+#   Copyright (C) 2018-2019 Luxoft Sweden AB
 #
 #   SPDX-License-Identifier: MIT
 #
@@ -11,8 +11,8 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/peak-linux-driver-${PV}/Documentation/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 SRC_URI = "http://www.peak-system.com/fileadmin/media/linux/files/peak-linux-driver-${PV}.tar.gz"
-SRC_URI[md5sum] = "f62d94c721aa6a83316fcb4232631a64"
-SRC_URI[sha256sum] = "62fa0ebde620a436816546bc1f82feb663a32f20db26e8889b7204b9686f5776"
+SRC_URI[md5sum] = "a10552ac9e6f64a250ec85bc8bef2d22"
+SRC_URI[sha256sum] = "6d1ad9e6feb75719feb926bf1c78caeaa84663855945866e749d92cc83758b73"
 
 DEPENDS = "popt"
 
