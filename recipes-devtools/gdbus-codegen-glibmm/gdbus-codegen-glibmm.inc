@@ -13,8 +13,10 @@ S = "${WORKDIR}/git/"
 
 inherit setuptools3
 
+PV_MAJOR = "${@d.getVar('PV').split('.')[0]}"
+
 do_install_append_class-native() {
-    sed -i '1 c\#!/usr/bin/env nativepython3' ${D}${bindir}/${BPN}2
+    sed -i '1 c\#!/usr/bin/env nativepython3' ${D}${bindir}/${BPN}${PV_MAJOR}
 }
 
 # Dependencies for building this software.
