@@ -1,3 +1,0 @@
-[Unit]
-Description=Light Target
-Requires=dbus.socket
