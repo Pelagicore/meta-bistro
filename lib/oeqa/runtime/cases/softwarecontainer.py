@@ -39,62 +39,92 @@ class SoftwareContainerTest(OERuntimeTestCase):
 
     @skipUnlessPassed("test_softwarecontainer_install")
     def test_softwarecontainer_agent(self):
-        # 1- Create a software container
-        (status, output) = self.target.run('dbus-send --system --print-reply \
-                         --dest=com.pelagicore.SoftwareContainerAgent \
-                         /com/pelagicore/SoftwareContainerAgent \
-                         com.pelagicore.SoftwareContainerAgent.Create \
-                         string:\'[{"writeBufferEnabled": false}]\'')
 
-        self.assertEqual(status, 0, "Create: %d %s" % (status, output))
+        # Test creating a container
+        def test_create_container(self, expected_container_path):
+            (status, output) = self.target.run('dbus-send --system --print-reply \
+                             --dest=com.pelagicore.SoftwareContainerAgent \
+                             /com/pelagicore/SoftwareContainerAgent \
+                             com.pelagicore.SoftwareContainerAgent.Create \
+                             string:\'[{"writeBufferEnabled": false}]\'')
 
-        container_path = "/tmp/container/SC-0/gateways"
+            self.assertEqual(status, 0, "Create: %d %s" % (status, output))
 
-        (status, output) = self.target.run('stat %s' % container_path)
-        self.assertEqual(status, 0, "Couldn't find %s" % container_path)
-        self.assertTrue("directory" in output, "%s is not a directory" % container_path)
+            (status, output) = self.target.run('stat %s' % expected_container_path)
+            self.assertEqual(status, 0, "Couldn't find %s" % expected_container_path)
+            self.assertTrue("directory" in output, "%s is not a directory" % expected_container_path)
 
-        # 2- Bind mount a host directory on to container directory
-        swc_dir = "/home/root/softwarecontainer"
+        # 1a- Create 1st software container
+        expected_container_path = "/tmp/container/SC-0/gateways"
+        test_create_container(self, expected_container_path)
 
-        (status, _) = self.target.run('mkdir %s' % swc_dir)
+        # 1b- Create 2nd softwarecontainer
+        expected_container_path = "/tmp/container/SC-1/gateways"
+        test_create_container(self, expected_container_path)
 
-        self.assertEqual(status, 0, "Couldn't create %s" % swc_dir)
+        # Test bind mounting a host directory on a container
+        def test_bind_mount(self, sc_id, host_path, container_path):
+            (status, _) = self.target.run('mkdir -p %s' % host_path)
 
-        (status, output) = self.target.run('dbus-send --system --print-reply \
-                         --dest=com.pelagicore.SoftwareContainerAgent \
-                         /com/pelagicore/SoftwareContainerAgent \
-                         com.pelagicore.SoftwareContainerAgent.BindMount \
-                         int32:0 string:\'/home/root/softwarecontainer\' \
-                         string:\'/app\' boolean:false')
+            self.assertEqual(status, 0, "Couldn't create %s" % host_path)
 
-        bindmount_path = "/tmp/container/SC-0/gateways/app"
+            (status, output) = self.target.run('dbus-send --system --print-reply \
+                             --dest=com.pelagicore.SoftwareContainerAgent \
+                             /com/pelagicore/SoftwareContainerAgent \
+                             com.pelagicore.SoftwareContainerAgent.BindMount \
+                             int32:' + str(sc_id) + ' string:\'' + host_path + '\' \
+                             string:\'' + container_path + '\' boolean:false')
 
-        (status, output) = self.target.run('stat %s' % bindmount_path)
-        self.assertEqual(status, 0, "Couldn't find %s" % bindmount_path)
-        self.assertTrue("directory" in output, "%s is not a directory" % bindmount_path)
+            bindmount_path = "/tmp/container/SC-" + str(sc_id) + "/gateways" + container_path
 
-        # 3- Execute a command that creates a file inside the container
-        (status, output) = self.target.run('dbus-send --system --print-reply \
-                         --dest=com.pelagicore.SoftwareContainerAgent \
-                         /com/pelagicore/SoftwareContainerAgent \
-                         com.pelagicore.SoftwareContainerAgent.Execute \
-                         int32:0 string:\'touch test.txt\' string:\'/app\' \
-                         string:\'\' dict:string:string:\'\'')
+            (status, output) = self.target.run('stat %s' % bindmount_path)
+            self.assertEqual(status, 0, "Couldn't find %s" % bindmount_path)
+            self.assertTrue("directory" in output, "%s is not a directory" % bindmount_path)
 
-        test_file = "/tmp/container/SC-0/gateways/app/test.txt"
+        host_path = "/home/root/softwarecontainer"
+        container_path = "/app"
+        # 2a- Bind mount a host directory on to 1st container directory
+        test_bind_mount(self, 0, host_path, container_path)
 
-        (status, output) = self.target.run('stat %s' % test_file)
-        self.assertEqual(status, 0, "Couldn't find %s" % test_file)
-        self.assertTrue("file" in output, "%s is not a file" % test_file)
+        # 2b- Bind mount a host directory on to 2nd container directory
+        test_bind_mount(self, 1, host_path, container_path)
 
-        # 4- Destroy the container
-        (status, output) = self.target.run('dbus-send --system --print-reply \
-                         --dest=com.pelagicore.SoftwareContainerAgent \
-                         /com/pelagicore/SoftwareContainerAgent \
-                         com.pelagicore.SoftwareContainerAgent.Destroy int32:0')
+        # Test execute a command inside a container
+        def test_execute_createfile(self, sc_id, container_path):
+            (status, output) = self.target.run('dbus-send --system --print-reply \
+                             --dest=com.pelagicore.SoftwareContainerAgent \
+                             /com/pelagicore/SoftwareContainerAgent \
+                             com.pelagicore.SoftwareContainerAgent.Execute \
+                             int32:' + str(sc_id) + ' string:\'touch test.txt\' string:\'' + container_path + '\' \
+                             string:\'\' dict:string:string:\'\'')
 
-        container_path = "/tmp/container/SC-0/gateways"
+            test_file = "/tmp/container/SC-" + str(sc_id) + "/gateways" + container_path + "/test.txt"
 
-        (status, output) = self.target.run('stat %s' % container_path)
-        self.assertNotEqual(status, 0, "Failed to remove %s" % container_path)
+            (status, output) = self.target.run('stat %s' % test_file)
+            self.assertEqual(status, 0, "Couldn't find %s" % test_file)
+            self.assertTrue("file" in output, "%s is not a file" % test_file)
+
+        container_path = "/app"
+        # 3a- Execute a command that creates a file inside the 1st container
+        test_execute_createfile(self, 0, container_path)
+
+        # 3b- Execute a command that creates a file inside the 2nd container
+        test_execute_createfile(self, 1, container_path)
+
+        # Test destroy a container
+        def test_destroy(self, sc_id):
+            (status, output) = self.target.run('dbus-send --system --print-reply \
+                             --dest=com.pelagicore.SoftwareContainerAgent \
+                             /com/pelagicore/SoftwareContainerAgent \
+                             com.pelagicore.SoftwareContainerAgent.Destroy int32:' + str(sc_id))
+
+            container_path = "/tmp/container/SC-" + str(sc_id) + "/gateways"
+
+            (status, output) = self.target.run('stat %s' % container_path)
+            self.assertNotEqual(status, 0, "Failed to remove %s" % container_path)
+
+        # 4a- Destroy 1st container
+        test_destroy(self, 0)
+
+        # 4b- Destroy 2nd container
+        test_destroy(self, 1)
