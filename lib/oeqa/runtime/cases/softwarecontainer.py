@@ -23,11 +23,11 @@ class SoftwareContainerTest(OERuntimeTestCase):
 
     @skipUnlessPassed("test_softwarecontainer_install")
     def test_lib_exists(self):
-        lib_file = "/usr/lib/libsoftwarecontainer.so.0.18.0"
+        lib_file = "/usr/lib/libsoftwarecontainer.so.0"
 
         (status, output) = self.target.run('stat %s' % lib_file)
         self.assertEqual(status, 0, "Couldn't find %s" % lib_file)
-        self.assertTrue("file" in output, "%s is not a file" % lib_file)
+        self.assertTrue("symbolic link" in output, "%s is not a symbolic link" % lib_file)
 
     @skipUnlessPassed("test_softwarecontainer_install")
     def test_dbus_config_exists(self):
