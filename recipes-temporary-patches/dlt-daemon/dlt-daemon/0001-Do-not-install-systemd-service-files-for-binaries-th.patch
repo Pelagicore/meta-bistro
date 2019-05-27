@@ -1,0 +1,94 @@
+From 33e05ef0a611ed0f50bb1cda46b2a6ecfdd8ca08 Mon Sep 17 00:00:00 2001
+From: Martin Ejdestig <mejdestig@luxoft.com>
+Date: Mon, 27 May 2019 10:59:23 +0200
+Subject: [PATCH] Do not install systemd service files for binaries that are
+ not built
+
+Noticed that dlt-system.service unconditionally failed since the binary
+was missing when building with a default configuration after an upgrade
+from 2.17.0 to 2.18.1. WITH_DLT_SYSTEM default changed to OFF in
+1b3c8b3d10fbc9a8dd9c717a939babd901b0b243 .
+
+Fix by only installing dlt-system.service if dlt-system is built. Also do
+the same for other binaries that have a service file.
+
+Signed-off-by: Martin Ejdestig <mejdestig@luxoft.com>
+---
+ systemd/CMakeLists.txt | 42 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 28 insertions(+), 14 deletions(-)
+
+diff --git a/systemd/CMakeLists.txt b/systemd/CMakeLists.txt
+index fd050b0..8609807 100644
+--- a/systemd/CMakeLists.txt
++++ b/systemd/CMakeLists.txt
+@@ -30,31 +30,42 @@ if(WITH_SYSTEMD)
+     configure_file(${CMAKE_SOURCE_DIR}/systemd/dlt.service.cmake ${PROJECT_BINARY_DIR}/systemd/dlt.service)
+     message( STATUS "Configured systemd unit file:dlt.service" )
+ 
+-    configure_file(${CMAKE_SOURCE_DIR}/systemd/dlt-system.service.cmake ${PROJECT_BINARY_DIR}/systemd/dlt-system.service)
+-    message( STATUS "Configured systemd unit file:dlt-system.service" )
++    if(WITH_DLT_SYSTEM)
++        configure_file(${CMAKE_SOURCE_DIR}/systemd/dlt-system.service.cmake ${PROJECT_BINARY_DIR}/systemd/dlt-system.service)
++        message( STATUS "Configured systemd unit file:dlt-system.service" )
++    endif(WITH_DLT_SYSTEM)
+ 
+     if(WITH_DLT_DBUS)
+         configure_file(${CMAKE_SOURCE_DIR}/systemd/dlt-dbus.service.cmake ${PROJECT_BINARY_DIR}/systemd/dlt-dbus.service)
+         message( STATUS "Configured systemd unit file:dlt-dbus.service" )
+     endif(WITH_DLT_DBUS)
+ 
+-    configure_file(${CMAKE_SOURCE_DIR}/systemd/dlt-receive.service.cmake ${PROJECT_BINARY_DIR}/systemd/dlt-receive.service)
+-    message( STATUS "Configured systemd unit file:dlt-receive.service" )
++    if(WITH_DLT_CONSOLE)
++        configure_file(${CMAKE_SOURCE_DIR}/systemd/dlt-receive.service.cmake ${PROJECT_BINARY_DIR}/systemd/dlt-receive.service)
++        message( STATUS "Configured systemd unit file:dlt-receive.service" )
++    endif(WITH_DLT_CONSOLE)
+ 
+     configure_file(${CMAKE_SOURCE_DIR}/systemd/dlt-example-user.service.cmake ${PROJECT_BINARY_DIR}/systemd/dlt-example-user.service)
+     message( STATUS "Configured systemd unit file:dlt-example-user.service" )
+ 
+-    set( DLT_ADAPTOR_UDP_APPID "DUDP" )
+-    set( DLT_ADAPTOR_UDP_CTID "DCTI" )
+-    set( DLT_ADAPTOR_UDP_PORT 4712 )
+-    configure_file(${CMAKE_SOURCE_DIR}/systemd/dlt-adaptor-udp.service.cmake ${PROJECT_BINARY_DIR}/systemd/dlt-adaptor-udp.service)
+-    message( STATUS "Configured systemd unit file:dlt-adaptor-udp.service" )
+-    message(STATUS "DLT adaptor udp configuration: APPID=${DLT_ADAPTOR_UDP_APPID} CTID=${DLT_ADAPTOR_UDP_CTID} PORT=${DLT_ADAPTOR_UDP_PORT}" )
+-
++    if(WITH_DLT_ADAPTOR)
++        set( DLT_ADAPTOR_UDP_APPID "DUDP" )
++        set( DLT_ADAPTOR_UDP_CTID "DCTI" )
++        set( DLT_ADAPTOR_UDP_PORT 4712 )
++        configure_file(${CMAKE_SOURCE_DIR}/systemd/dlt-adaptor-udp.service.cmake ${PROJECT_BINARY_DIR}/systemd/dlt-adaptor-udp.service)
++        message( STATUS "Configured systemd unit file:dlt-adaptor-udp.service" )
++        message(STATUS "DLT adaptor udp configuration: APPID=${DLT_ADAPTOR_UDP_APPID} CTID=${DLT_ADAPTOR_UDP_CTID} PORT=${DLT_ADAPTOR_UDP_PORT}" )
++    endif(WITH_DLT_ADAPTOR)
+ 
+     install(FILES ${PROJECT_BINARY_DIR}/systemd/dlt.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR} )
+-    install(FILES ${PROJECT_BINARY_DIR}/systemd/dlt-system.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR} )
+-    install(FILES ${PROJECT_BINARY_DIR}/systemd/dlt-receive.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR} )
++
++    if(WITH_DLT_SYSTEM)
++        install(FILES ${PROJECT_BINARY_DIR}/systemd/dlt-system.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR} )
++    endif(WITH_DLT_SYSTEM)
++
++    if(WITH_DLT_CONSOLE)
++        install(FILES ${PROJECT_BINARY_DIR}/systemd/dlt-receive.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR} )
++    endif(WITH_DLT_CONSOLE)
+ 
+     if(WITH_DLT_DBUS)
+     	install(FILES ${PROJECT_BINARY_DIR}/systemd/dlt-dbus.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR} )
+@@ -64,7 +75,10 @@ if(WITH_SYSTEMD)
+     	install(FILES ${PROJECT_BINARY_DIR}/systemd/dlt-example-user.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR} )
+     endif(WITH_DLT_EXAMPLES)
+ 
+-    install(FILES ${PROJECT_BINARY_DIR}/systemd/dlt-adaptor-udp.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR} )
++    if(WITH_DLT_ADAPTOR)
++        install(FILES ${PROJECT_BINARY_DIR}/systemd/dlt-adaptor-udp.service DESTINATION ${SYSTEMD_CONFIGURATIONS_FILES_DIR} )
++    endif(WITH_DLT_ADAPTOR)
++
+     message(STATUS "Unit files will be installed to ${SYSTEMD_CONFIGURATIONS_FILES_DIR} after make install" )
+ 
+ endif(WITH_SYSTEMD)
+-- 
+2.21.0
+
