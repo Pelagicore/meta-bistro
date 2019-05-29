@@ -23,10 +23,14 @@ void buildBistro(String variant, String imageName) {
         sh "rm -rf pelux-manifests/"
         sh "git clone https://github.com/Pelagicore/pelux-manifests.git -b ${branchName}"
         println("Using the specified branch for build: ${branchName}")
+        sh "cp -R ${bistroDir} pelux-manifests/${bistroDir}"
         dir('pelux-manifests') {
-            def code = load "ci-scripts/yocto.groovy"
-            String bistroPath = "${env.WORKSPACE}/${bistroDir}"
-            code.buildWithLayer(variant, imageName, bistroDir, bistroPath)
+            def customImage = docker.image("pelux/pelux-yocto:yoctouser")
+            customImage.inside("-v $WORKSPACE/pelux-manifests:/workspace -v /var/yocto-cache:/var/yocto-cache --cap-add=NET_ADMIN --device=/dev/net/tun") {
+                def code = load "ci-scripts/yocto2.groovy"
+                String bistroPath = "pelux-manifests/${bistroDir}"
+                code.buildWithLayer(variant, imageName, bistroDir, bistroPath)
+            }
         }
     }
 }
