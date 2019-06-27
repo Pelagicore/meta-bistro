@@ -31,11 +31,9 @@ RDEPENDS_packagegroup-bistro-utils = " \
 "
 
 RDEPENDS_packagegroup-bistro-debug-utils = " \
-    gdbserver                                \
     ldd                                      \
     ltrace                                   \
     swaplogger                               \
     systemd-analyze                          \
-    strace                                   \
     valgrind                                 \
 "
