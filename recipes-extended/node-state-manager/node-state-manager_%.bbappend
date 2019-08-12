@@ -18,3 +18,11 @@ SRC_URI_append = " \
     git://github.com/GENIVI/simple-node-state-machine.git;protocol=https;destsuffix=git/${NSMC};name=${NSMC} \
     file://0001-Build-${NSMC}.patch \
 "
+do_install_append() {
+    install -d ${D}/Data/mnt-c/NodeStateManager
+    install -d ${D}/Data/mnt-wt/NodeStateManager
+}
+FILES_${PN} += "\
+   /Data/mnt-c/NodeStateManager \
+   /Data/mnt-wt/NodeStateManager \
+"
