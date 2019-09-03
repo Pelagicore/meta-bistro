@@ -19,6 +19,12 @@ DEPENDS += "glibmm gdbus-codegen-glibmm-native"
 
 S = "${WORKDIR}/git"
 
+PACKAGECONFIG ??= " \
+    msd_id_source \
+"
+
+PACKAGECONFIG[msd_id_source] = "-Dmsd_id_source=true,-Dmsd_id_source=false"
+
 FILES_${PN} = " \
     ${bindir}/uimcli \
     ${bindir}/user-identification-manager \
