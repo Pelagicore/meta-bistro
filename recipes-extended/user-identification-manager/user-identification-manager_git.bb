@@ -11,7 +11,7 @@ PV = "0.1.0+git${SRCPV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/Pelagicore/user-identification-manager.git;branch=master;protocol=https"
-SRCREV = "4ada21266f72b4e98337dfc787b2906427f7ed20"
+SRCREV = "5bcddca8ebdf546d8e86421f71b2412da8146c64"
 
 inherit meson systemd
 
@@ -21,9 +21,11 @@ S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
     msd_id_source \
+    scard_id_source \
 "
 
 PACKAGECONFIG[msd_id_source] = "-Dmsd_id_source=true,-Dmsd_id_source=false"
+PACKAGECONFIG[scard_id_source] = "-Dscard_id_source=true,-Dscard_id_source=false,pcsc-lite,pcsc-lite ccid"
 
 FILES_${PN} = " \
     ${bindir}/uimcli \
