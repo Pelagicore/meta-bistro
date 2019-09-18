@@ -11,7 +11,7 @@ PV = "0.1.0+git${SRCPV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/Pelagicore/connectivity-manager.git;branch=master;protocol=https"
-SRCREV = "b03d7d88018b29a81c86a7a7c6f5d876772648b3"
+SRCREV = "6fe920b050f4ac60445e470b5d27cdaed138a22b"
 
 inherit meson systemd
 
